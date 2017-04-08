@@ -14,7 +14,9 @@
   },
   "homepage": "https://github.com/fcamblor/rg-gallery#readme",
   "devDependencies": {
+    "@types/es6-promise": "^0.0.32",
     "@types/jquery": "1.10.31",
+    "@types/lodash": "3.10.1",
     "@types/photoswipe": "^4.0.27",
     "bower": "1.8.0",
     "connect-modrewrite": "0.9.0",

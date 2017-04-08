@@ -2,9 +2,17 @@
 # yarn lockfile v1
 
 
+"@types/es6-promise@^0.0.32":
+  version "0.0.32"
+  resolved "https://registry.yarnpkg.com/@types/es6-promise/-/es6-promise-0.0.32.tgz#3bcf44fb1e429f3df76188c8c6d874463ba371fd"
+
 "@types/jquery@1.10.31":
   version "1.10.31"
   resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-1.10.31.tgz#cebc68d369ded05344000a9b7bc62fcca7131de5"
+
+"@types/lodash@3.10.1":
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-3.10.1.tgz#ef8c8c35649f07884e0fb7763b24baaf7e175c36"
 
 "@types/photoswipe@^4.0.27":
   version "4.0.27"
