@@ -1,0 +1,17 @@
+{
+  "name": "rg-gallery",
+  "version": "1.0.0",
+  "dependencies": {
+    "photoswipe": "4.0.8",
+    "requirejs": "2.3.3",
+    "jquery": "1.10.2"
+  },
+  "devDependencies": {},
+  "buildConfig": {
+    "layout": {
+      "app": "app",
+      "dist": "dist"
+    }
+  },
+  "overrides": {}
+}
