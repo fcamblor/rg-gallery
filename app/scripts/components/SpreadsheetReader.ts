@@ -17,7 +17,8 @@ export type LineResult = {[key: string]: string};
 export interface ISpreadsheetReaderDescriptor<T> {
     firstRow: Number;
     columnFields: LineResult;
-    fieldsRequiredToConsiderFilledRow: string[];
+    isFilledRow?: (obj:T) => boolean;
+    fieldsRequiredToConsiderFilledRow?: string[];
     sortBy?: Function|Function[]|string|string[];
     resultClass?: new (opts:any) => T;
 }
@@ -29,7 +30,8 @@ export interface IPostProcessableSpreadsheetReaderDescriptor<T,T2> extends ISpre
 export class SpreadsheetReaderDescriptor<T> implements ISpreadsheetReaderDescriptor<T> {
     firstRow: Number;
     columnFields: LineResult;
-    fieldsRequiredToConsiderFilledRow: string[];
+    isFilledRow?: (obj:T) => boolean;
+    fieldsRequiredToConsiderFilledRow?: string[];
     sortBy: Function|Function[]|string|string[];
     resultClass: new (opts:any) => T;
 
@@ -113,8 +115,14 @@ export class SpreadsheetReader {
                     }
                 }).values()
                 .filter((obj: T) => {
-                    let emptyRequiredColumns = _.filter(descriptor.fieldsRequiredToConsiderFilledRow, fieldRequiredToConsiderFilledRow => !obj[fieldRequiredToConsiderFilledRow]);
-                    return emptyRequiredColumns.length === 0;
+                    if(descriptor.isFilledRow) {
+                        return descriptor.isFilledRow(<any>obj);
+                    } else if(descriptor.fieldsRequiredToConsiderFilledRow) {
+                        let emptyRequiredColumns = _.filter(descriptor.fieldsRequiredToConsiderFilledRow, fieldRequiredToConsiderFilledRow => !obj[fieldRequiredToConsiderFilledRow]);
+                        return emptyRequiredColumns.length === 0;
+                    } else {
+                        return true;
+                    }
                 }).value();
 
             if(descriptor.sortBy){
