@@ -1,6 +1,7 @@
 
 
 import {PHOTO_SWIPE_HTML} from './PhotoSwipeHTML';
+import {PicturesLoader} from './PicturesLoader';
 export class PhotoSwipeComponent {
 
 
@@ -9,17 +10,20 @@ export class PhotoSwipeComponent {
 
     init(){
         this.$el.html(PHOTO_SWIPE_HTML);
-        new PhotoSwipe(this.$el.find(".pswp").get(0), PhotoSwipeUI_Default, [
-            {
-                src: 'https://placekitten.com/600/400',
-                w: 600,
-                h: 400
-            },
-            {
-                src: 'https://placekitten.com/1200/900',
-                w: 1200,
-                h: 900
-            }
-        ], { index: 0 }).init();
+
+        let picturesLoader = new PicturesLoader();
+        picturesLoader.load().then(() => {
+            var drawings = picturesLoader.loadedDrawings();
+            new PhotoSwipe(this.$el.find(".pswp").get(0), PhotoSwipeUI_Default,
+                _.map(drawings, (drawing) => {
+                    if(drawing.picture1) {
+                        return { src: drawing.picture1, w: drawing.picture1Width, h: drawing.picture1Height };
+                    } else {
+                        return { src: drawing.picture2, w: drawing.picture2Width, h: drawing.picture2Height };
+                    }
+                }),
+                { index: 0 }
+            ).init();
+        });
     }
 }
