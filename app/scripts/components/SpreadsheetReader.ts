@@ -68,26 +68,23 @@ export type URLFactory = (tabId: number) => string;
 
 export class SpreadsheetReader {
 
-    constructor(private errorHandler?: (message: string) => void) {
-        if(!errorHandler) {
-            this.errorHandler = console.error;
-        }
+    constructor() {
     }
 
-    public readFromDescriptors(descriptors: SpreadsheetTabDescriptor<any>[], urlFactory: URLFactory) {
-        let fetchPromises = _.map(descriptors, (spreadsheetTabDescriptor) =>
+    public static readFromDescriptors(spreadsheetId: string, descriptors: SpreadsheetTabDescriptor<any>[], errorHandler?: (message: string) => void): Promise<any[]> {
+        return Promise.all(_.map(descriptors, (spreadsheetTabDescriptor) =>
             $.ajax({
-                url: urlFactory(spreadsheetTabDescriptor.tabId),
-                jsonp: 'callback',
-                dataType: 'jsonp'
+                url: `https://spreadsheets.google.com/feeds/cells/${spreadsheetId}/${spreadsheetTabDescriptor.tabId}/public/basic?alt=json&v=3.0`,
+                dataType: 'json'
             }).then(
-                result => new SpreadsheetReader().read(result.data, spreadsheetTabDescriptor.descriptor),
+                result =>
+                    new SpreadsheetReader().read(result, spreadsheetTabDescriptor.descriptor),
                 () => {
-                    this.errorHandler("Error while fetching spreadsheet info for tab " + spreadsheetTabDescriptor.tabId);
+                    (errorHandler || console.error)(`Error while fetching spreadsheet info for tab ${spreadsheetTabDescriptor.tabId}`);
                     return Promise.reject(null);
                 }
             )
-        );
+        )).then((...results) => results);
     }
 
     public read<T,T2>(spreadsheetRepresentation: SpreadsheetContent, descriptor: IPostProcessableSpreadsheetReaderDescriptor<T,T2>): Promise<T[]>|Promise<T2> {
