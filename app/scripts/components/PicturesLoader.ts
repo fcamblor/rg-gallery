@@ -28,10 +28,10 @@ export class PicturesLoader {
     load(): Promise<void>{
         return SpreadsheetReader.readFromDescriptors('1P-b2Nirm8fP1nTiNp6WVlbaGm-98jYKsDGpP77B2Jec', [
             new SpreadsheetTabDescriptor({
-                tabId: 2,
+                tabId: 1,
                 dataField: "peintures",
                 descriptor: new SpreadsheetReaderDescriptor<Peinture>({
-                    firstRow: 5,
+                    firstRow: 4,
                     columnFields: {
                         "A": "id", "O": "picture1", "P": "picture2", "Q": "picture1Size", "R": "picture2Size"
                     },
