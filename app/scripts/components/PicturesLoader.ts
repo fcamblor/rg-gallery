@@ -4,7 +4,7 @@ import {
 } from './SpreadsheetReader';
 
 
-interface Peinture {
+interface GSDrawing {
     id: string;
     picture1: string;
     picture2: string;
@@ -12,15 +12,15 @@ interface Peinture {
     picture2Size: string;
 }
 
-interface SizedPeinture extends Peinture {
-    picture1Width: number;
-    picture1Height: number;
-    picture2Width: number;
-    picture2Height: number;
+interface Drawing {
+    id: string;
+    picture: string;
+    width: number;
+    height: number;
 }
 
 export class PicturesLoader {
-    drawings: Peinture[];
+    drawings: GSDrawing[];
 
     constructor(){
     }
@@ -30,7 +30,7 @@ export class PicturesLoader {
             new SpreadsheetTabDescriptor({
                 tabId: 1,
                 dataField: "peintures",
-                descriptor: new SpreadsheetReaderDescriptor<Peinture>({
+                descriptor: new SpreadsheetReaderDescriptor<GSDrawing>({
                     firstRow: 4,
                     columnFields: {
                         "A": "id", "O": "picture1", "P": "picture2", "Q": "picture1Size", "R": "picture2Size"
@@ -46,18 +46,26 @@ export class PicturesLoader {
         });
     }
 
-    loadedDrawings(): SizedPeinture[]{
+    loadedDrawings(): Drawing[]{
         return _(this.drawings)
-            .filter((drawing) => ((!!drawing.picture1 && !!drawing.picture1Size) || (!!drawing.picture2 && !!drawing.picture2Size)))
-            .each((drawing: SizedPeinture) => {
-              if(drawing.picture1Size) {
-                  drawing.picture1Width = Number(drawing.picture1Size.replace(/w=([0-9]+),.*/gi, "$1"));
-                  drawing.picture1Height = Number(drawing.picture1Size.replace(/.*h=([0-9]+)$/gi, "$1"));
-              }
-              if(drawing.picture2Size) {
-                  drawing.picture2Width = Number(drawing.picture2Size.replace(/w=([0-9]+),.*/gi, "$1"));
-                  drawing.picture2Height = Number(drawing.picture2Size.replace(/.*h=([0-9]+)$/gi, "$1"));
-              }
-            }).map((drawing: SizedPeinture) => drawing).value();
+            .map((drawing: GSDrawing) => {
+                let pictureSize = null, picture = null;
+                if (drawing.picture1Size && drawing.picture1 && drawing.picture1 !== "#N/A") {
+                    pictureSize = drawing.picture1Size;
+                    picture = drawing.picture1;
+                }
+                if (drawing.picture2Size && drawing.picture2) {
+                    pictureSize = drawing.picture2Size;
+                    picture = drawing.picture2;
+                }
+                if(pictureSize && picture) {
+                    let width = Number(pictureSize.replace(/w=([0-9]+),.*/gi, "$1"));
+                    let height = Number(pictureSize.replace(/.*h=([0-9]+),.*/gi, "$1"));
+                    return { id: drawing.id, picture: picture, width, height };
+                } else {
+                    return null;
+                }
+            }).filter((drawing) => !!drawing)
+            .value();
     }
 }

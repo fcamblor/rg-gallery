@@ -16,11 +16,7 @@ export class PhotoSwipeComponent {
             var drawings = picturesLoader.loadedDrawings();
             new PhotoSwipe(this.$el.find(".pswp").get(0), PhotoSwipeUI_Default,
                 _.map(drawings, (drawing) => {
-                    if(drawing.picture1) {
-                        return { src: drawing.picture1, w: drawing.picture1Width, h: drawing.picture1Height };
-                    } else {
-                        return { src: drawing.picture2, w: drawing.picture2Width, h: drawing.picture2Height };
-                    }
+                    return { src: drawing.picture, w: drawing.width, h: drawing.height };
                 }),
                 { index: 0 }
             ).init();
