@@ -24,12 +24,12 @@
     <!-- endbuild -->
 
   </head>
-  <body>
+  <body class="no-touch">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="//browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div id="gallery">Hello world</div>
+    <div id="gallery" class="gallery"></div>
 
     <!--[if lt IE 9]>
     <![endif]-->
@@ -49,5 +49,14 @@
     <script src="scripts/ts-app.js"></script>
     <!-- endbuild -->
     <script type="text/javascript">require(['main'], function(){ console.log("Application started !"); });</script>
+    <script type="text/javascript">
+        $(function(){
+            // See if this is a touch device
+            if ('ontouchstart' in window) {
+                // Set the correct [touchscreen] body class
+                $('body').removeClass('no-touch').addClass('touch');
+            }
+        });
+    </script>
 </body>
 </html>

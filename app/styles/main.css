@@ -1,0 +1,92 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #EEE;
+  font: 10px/13px 'Lucida Sans',sans-serif;
+}
+/* Here's the "wrapper" that will hold all of our tiles. */
+.gallery {
+  overflow: hidden; /* The use of overflow:hidden allows us to apply floats to the tiles within. */
+  margin: 10px;
+}
+/* Next up is the box (which corresponds to a tile). */
+.box {
+  float: left; /* The float creates the grid, by ensuring that tiles are automatically laid out in rows. */
+  position: relative; /* The relative positioning, used in conjunction with position:absolute on boxInner, makes the boxes remain square regardless of content. */
+  width: 20%; /* The width and padding-bottom are what determine the size of the box and make it square. */
+  padding-bottom: 20%;
+}
+/* This is the actual content area for each tile.  It is positioned with 10 pixels around each edge. */
+.boxInner,
+figure {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 10px;
+  bottom: 10px;
+  overflow: hidden;
+}
+/* We want our images (which are square) to fill the full tile width, so we use width:100% */
+.boxInner.landscape img,
+.figure.landscape img {
+  width: 100%;
+}
+.boxInner.portrait img,
+.figure.portrait img {
+  height: 100%;
+}
+/* This definition styles the title text box */
+.boxInner .titleBox,
+figure figcaption {
+  /* The text box goes at the bottom of each tile, initially hidden out of view via a negative margin-bottom value: */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-bottom: -50px;
+  /* We set a partially-transparent background along with some padding: */
+  background: #000;
+  background: rgba(0, 0, 0, 0.5);
+  color: #FFF;
+  padding: 10px;
+  text-align: center;
+  /* We specify a CSS3 transition to use when showing/hiding the text box: */
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+}
+/* Here are the hover styles used to reveal the text box.  Note that we have separate styles for touch and non-touch environments; more on that in a moment. */
+body.no-touch .boxInner:hover .titleBox, body.touch .boxInner.touchFocus .titleBox,
+body.no-touch figure:hover figcaption, body.touch figure.touchFocus figcaption {
+  margin-bottom: 0;
+}
+/* Here are our media queries to "snap" the number of tiles per row: */
+@media only screen and (max-width : 480px) {
+  /* Smartphone view: 1 tile */
+  .box {
+    width: 100%;
+    padding-bottom: 100%;
+  }
+}
+@media only screen and (max-width : 650px) and (min-width : 481px) {
+  /* Tablet view: 2 tiles */
+  .box {
+    width: 50%;
+    padding-bottom: 50%;
+  }
+}
+@media only screen and (max-width : 1050px) and (min-width : 651px) {
+  /* Small desktop / ipad view: 3 tiles */
+  .box {
+    width: 33.3%;
+    padding-bottom: 33.3%;
+  }
+}
+@media only screen and (max-width : 1290px) and (min-width : 1051px) {
+  /* Medium desktop: 4 tiles */
+  .box {
+    width: 25%;
+    padding-bottom: 25%;
+  }
+}
