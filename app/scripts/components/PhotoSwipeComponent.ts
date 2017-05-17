@@ -12,7 +12,7 @@ export class PhotoSwipeComponent {
     open(options: PhotoSwipe.Options){
         new PhotoSwipe(this.$el.find(".pswp").get(0), PhotoSwipeUI_Default,
             _.map(this.drawings, (drawing) => {
-                return { src: drawing.picture, w: drawing.width, h: drawing.height };
+                return { src: drawing.picture, w: drawing.width, h: drawing.height, title: `#${drawing.id} ${drawing.title}` };
             }),
             options
         ).init();
