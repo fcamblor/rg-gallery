@@ -6,14 +6,16 @@ import {
 
 interface GSDrawing {
     id: string;
+    title: string;
     picture1: string;
     picture2: string;
     picture1Size: string;
     picture2Size: string;
 }
 
-interface Drawing {
+export interface Drawing {
     id: string;
+    title: string;
     picture: string;
     width: number;
     height: number;
@@ -33,7 +35,7 @@ export class PicturesLoader {
                 descriptor: new SpreadsheetReaderDescriptor<GSDrawing>({
                     firstRow: 4,
                     columnFields: {
-                        "A": "id", "O": "picture1", "P": "picture2", "Q": "picture1Size", "R": "picture2Size"
+                        "A": "id", "C": "title", "O": "picture1", "P": "picture2", "Q": "picture1Size", "R": "picture2Size"
                     },
                     fieldsRequiredToConsiderFilledRow: ["id"]
                 })
@@ -50,22 +52,26 @@ export class PicturesLoader {
         return _(this.drawings)
             .map((drawing: GSDrawing) => {
                 let pictureSize = null, picture = null;
-                if (drawing.picture1Size && drawing.picture1 && drawing.picture1 !== "#N/A") {
+                if (PicturesLoader.isValidPicture(drawing.picture1,drawing.picture1Size)) {
                     pictureSize = drawing.picture1Size;
                     picture = drawing.picture1;
                 }
-                if (drawing.picture2Size && drawing.picture2) {
+                if (PicturesLoader.isValidPicture(drawing.picture2,drawing.picture2Size)) {
                     pictureSize = drawing.picture2Size;
                     picture = drawing.picture2;
                 }
                 if(pictureSize && picture) {
                     let width = Number(pictureSize.replace(/w=([0-9]+),.*/gi, "$1"));
                     let height = Number(pictureSize.replace(/.*h=([0-9]+),.*/gi, "$1"));
-                    return { id: drawing.id, picture: picture, width, height };
+                    return { id: drawing.id, picture: picture, title: drawing.title, width, height };
                 } else {
                     return null;
                 }
             }).filter((drawing) => !!drawing)
             .value();
+    }
+
+    private static isValidPicture(pictureUrl: string, pictureSize: string) {
+        return pictureSize && pictureUrl && pictureUrl !== "#N/A" && pictureUrl.indexOf("...") === -1;
     }
 }
