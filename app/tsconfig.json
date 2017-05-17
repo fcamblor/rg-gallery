@@ -7,8 +7,7 @@
     "preserveConstEnums": true,
     "outFile": "../.tmp/scripts/ts-app.js",
     "sourceMap": true,
-    "inlineSources": true,
-    "allowJs": true
+    "inlineSources": true
   },
   "exclude": [
     "sw-*",
