@@ -24,6 +24,21 @@ export const PHOTO_SWIPE_HTML = `
                 <label>Type</label> : <div class="tag drawing_type"></div>
             </div>
             <div>
+                <label>Dernier détenteur</label> : <div class="tag drawing_lastHolder"></div>
+            </div>
+            <div>
+                <label>Localisation</label> : <div class="tag drawing_localization"></div>
+            </div>
+            <div>
+                <label>Date</label> : <div class="tag drawing_date"></div>
+            </div>
+            <div>
+                <label>Signature</label> : <div class="tag drawing_signature"></div>
+            </div>
+            <div>
+                <label>Dimensions (en cm)</label> : <div class="inline drawing_dimensions"></div>
+            </div>
+            <div>
                 <label>Mots-clefs</label> : <div class="multiple-tags drawing_tags"></div>
             </div>
         </div>

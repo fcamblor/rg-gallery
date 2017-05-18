@@ -78,13 +78,16 @@ figure figcaption {
   text-decoration: underline;
 }
 
-.details .tag {
-  border: 1px solid white;
-  border-radius: 10px;
+.details .tag, .inline {
   padding: 5px;
   margin-right: 4px;
   margin-bottom: 2px;
   display: inline-block;
+}
+
+.details .tag {
+  border: 1px solid white;
+  border-radius: 10px;
 }
 
 .with-details .details {
