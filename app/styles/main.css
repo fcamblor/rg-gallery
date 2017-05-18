@@ -50,11 +50,63 @@ figure figcaption {
   color: #FFF;
   padding: 10px;
   text-align: center;
-  /* We specify a CSS3 transition to use when showing/hiding the text box: */
-  -webkit-transition: all 0.3s ease-out;
-  -moz-transition: all 0.3s ease-out;
-  -o-transition: all 0.3s ease-out;
-  transition: all 0.3s ease-out;
+}
+
+.details {
+  position: absolute;
+  right: -300px;
+  height: 100%;
+  width: 300px;
+  background-color: #616161;
+  color: white;
+  font-size: 13px;
+  padding-top: 55px;
+  padding-left: 10px;
+  display: block;
+
+  overflow: hidden;
+
+  transform: translateX(0px);
+  -webkit-transform: translateX(0px);
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.details label {
+  text-decoration: underline;
+}
+
+.details .tag {
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 5px;
+  margin-right: 4px;
+  margin-bottom: 2px;
+  display: inline-block;
+}
+
+.with-details .details {
+
+  transform: translateX(-300px);
+  -webkit-transform: translateX(-300px);
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.with-details .pswp__zoom-wrap {
+  left: -150px;
+  transform: translateX(-150px);
+  -webkit-transform: translateX(-150px);
+
+  /* Makes the picture slide to the left when details appears */
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .pswp__button--info {

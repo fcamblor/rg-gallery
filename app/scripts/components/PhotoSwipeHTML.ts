@@ -18,6 +18,12 @@ export const PHOTO_SWIPE_HTML = `
             <div class="pswp__item"></div>
             <div class="pswp__item"></div>
         </div>
+        
+        <div class="details">
+            <div>
+                <label>Type</label> : <div class="tag drawing_type"></div>
+            </div>
+        </div>
 
         <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
         <div class="pswp__ui pswp__ui--hidden">

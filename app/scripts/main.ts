@@ -1,4 +1,3 @@
-import {PhotoSwipeComponent} from './components/PhotoSwipeComponent';
 import {PicturesLoader} from './components/PicturesLoader';
 import {PicturesGallery} from './components/PicturesGallery';
 

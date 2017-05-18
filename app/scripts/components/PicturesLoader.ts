@@ -7,11 +7,14 @@ import {
 interface GSDrawing {
     id: string;
     title: string;
+    type: string;
     picture1: string;
     picture2: string;
     picture1Size: string;
     picture2Size: string;
 }
+
+export type DrawingType = 'Gouache'|'Huile'|'Fresque'|'Inconnu';
 
 export interface Drawing {
     id: string;
@@ -19,6 +22,7 @@ export interface Drawing {
     picture: string;
     width: number;
     height: number;
+    type: DrawingType;
 }
 
 export class PicturesLoader {
@@ -35,7 +39,7 @@ export class PicturesLoader {
                 descriptor: new SpreadsheetReaderDescriptor<GSDrawing>({
                     firstRow: 4,
                     columnFields: {
-                        "A": "id", "C": "title", "O": "picture1", "P": "picture2", "Q": "picture1Size", "R": "picture2Size"
+                        "A": "id", "B": "type", "C": "title", "O": "picture1", "P": "picture2", "Q": "picture1Size", "R": "picture2Size"
                     },
                     fieldsRequiredToConsiderFilledRow: ["id"]
                 })
@@ -51,6 +55,14 @@ export class PicturesLoader {
     loadedDrawings(): Drawing[]{
         return _(this.drawings)
             .map((drawing: GSDrawing) => {
+                let type: DrawingType;
+                switch((drawing.type || "").toUpperCase()) {
+                    case 'H': type = 'Huile'; break;
+                    case 'FRESQUE': type = 'Fresque'; break;
+                    case 'G': type = 'Gouache'; break;
+                    default: type = 'Inconnu';
+                }
+
                 let pictureSize = null, picture = null;
                 if (PicturesLoader.isValidPicture(drawing.picture1,drawing.picture1Size)) {
                     pictureSize = drawing.picture1Size;
@@ -63,7 +75,7 @@ export class PicturesLoader {
                 if(pictureSize && picture) {
                     let width = Number(pictureSize.replace(/w=([0-9]+),.*/gi, "$1"));
                     let height = Number(pictureSize.replace(/.*h=([0-9]+),.*/gi, "$1"));
-                    return { id: drawing.id, picture: picture, title: drawing.title, width, height };
+                    return { id: drawing.id, picture: picture, title: drawing.title, width, height, type };
                 } else {
                     return null;
                 }
