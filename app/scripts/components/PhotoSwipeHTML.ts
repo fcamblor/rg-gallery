@@ -35,6 +35,8 @@ export const PHOTO_SWIPE_HTML = `
                 <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
 
                 <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                
+                <button class="pswp__button pswp__button--info" title="Picture infos"></button>
 
                 <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
                 <!-- element will get class pswp__preloader--active when preloader is running -->
