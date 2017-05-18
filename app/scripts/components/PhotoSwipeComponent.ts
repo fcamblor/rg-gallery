@@ -21,10 +21,34 @@ export class PhotoSwipeComponent {
             options
         );
         this.photoSwipe.init();
+
+        this.photoSwipe.listen('afterChange', () => {
+            this.showDetailsFor(<DrawingItem>this.photoSwipe.currItem);
+        });
+        this.showDetailsFor(<DrawingItem>this.photoSwipe.currItem);
+
+        this.$el.find(".pswp .pswp__button--info").click((event) => {
+            this.$el.find(".pswp__scroll-wrap").toggleClass("with-details");
+        });
+    }
+
+    showDetailsFor(drawing: DrawingItem) {
+        let $container = $((<any>this.photoSwipe).scrollWrap);
+        _.each([
+            { attr: 'type', selector: '.drawing_type', elAttribute: 'text' }
+        ], (binding) => {
+            let $el = $container.find(binding.selector);
+            let val = drawing[binding.attr];
+            switch(binding.elAttribute) {
+                case 'text': $el.text(val); break;
+                default: $el.val(val); break;
+            }
+        });
     }
 
     destroy() {
         if(this.photoSwipe) {
+            this.$el.find(".pswp .pswp__button--info").off('click');
             this.photoSwipe.destroy();
             this.photoSwipe = null;
         }
