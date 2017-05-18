@@ -3,6 +3,14 @@ import {Drawing, PicturesLoader} from './PicturesLoader';
 
 interface DrawingItem extends PhotoSwipe.Item {
     type: string;
+    tags: string[];
+}
+
+interface Binding {
+    attr: string;
+    selector: string;
+    elAttribute?: 'text'|'html';
+    converter?: (val: any) => string;
 }
 
 export class PhotoSwipeComponent {
@@ -16,7 +24,7 @@ export class PhotoSwipeComponent {
     open(options: PhotoSwipe.Options){
         this.photoSwipe = new PhotoSwipe(this.$el.find(".pswp").get(0), PhotoSwipeUI_Default,
             _.map<Drawing, DrawingItem>(this.drawings, (drawing, index) => {
-                return { src: drawing.picture, w: drawing.width, h: drawing.height, title: `#${drawing.id} ${drawing.title}`, type: drawing.type };
+                return { src: drawing.picture, w: drawing.width, h: drawing.height, title: `#${drawing.id} ${drawing.title}`, type: drawing.type, tags: drawing.tags };
             }),
             options
         );
@@ -35,12 +43,17 @@ export class PhotoSwipeComponent {
     showDetailsFor(drawing: DrawingItem) {
         let $container = $((<any>this.photoSwipe).scrollWrap);
         _.each([
-            { attr: 'type', selector: '.drawing_type', elAttribute: 'text' }
-        ], (binding) => {
+            { attr: 'type', selector: '.drawing_type', elAttribute: 'text' },
+            { attr: 'tags', selector: '.drawing_tags', elAttribute: 'html', converter: (tags: string[]) => _.map(tags, (tag) => `<div class="tag">${tag}</div>`).join("") }
+        ], (binding: Binding) => {
             let $el = $container.find(binding.selector);
             let val = drawing[binding.attr];
+            if(binding.converter) {
+                val = binding.converter(val);
+            }
             switch(binding.elAttribute) {
                 case 'text': $el.text(val); break;
+                case 'html': $el.html(val); break;
                 default: $el.val(val); break;
             }
         });

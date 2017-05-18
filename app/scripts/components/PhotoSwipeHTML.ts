@@ -23,6 +23,9 @@ export const PHOTO_SWIPE_HTML = `
             <div>
                 <label>Type</label> : <div class="tag drawing_type"></div>
             </div>
+            <div>
+                <label>Mots-clefs</label> : <div class="multiple-tags drawing_tags"></div>
+            </div>
         </div>
 
         <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->

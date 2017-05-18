@@ -113,6 +113,10 @@ figure figcaption {
   background-position: -176px 0;
 }
 
+.multiple-tags {
+  display: inline;
+}
+
 /* Here are the hover styles used to reveal the text box.  Note that we have separate styles for touch and non-touch environments; more on that in a moment. */
 body.no-touch .boxInner:hover .titleBox, body.touch .boxInner.touchFocus .titleBox,
 body.no-touch figure:hover figcaption, body.touch figure.touchFocus figcaption {

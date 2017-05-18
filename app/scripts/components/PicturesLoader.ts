@@ -8,6 +8,7 @@ interface GSDrawing {
     id: string;
     title: string;
     type: string;
+    tagsStr: string;
     picture1: string;
     picture2: string;
     picture1Size: string;
@@ -23,6 +24,7 @@ export interface Drawing {
     width: number;
     height: number;
     type: DrawingType;
+    tags?: string[];
 }
 
 export class PicturesLoader {
@@ -39,7 +41,7 @@ export class PicturesLoader {
                 descriptor: new SpreadsheetReaderDescriptor<GSDrawing>({
                     firstRow: 4,
                     columnFields: {
-                        "A": "id", "B": "type", "C": "title", "O": "picture1", "P": "picture2", "Q": "picture1Size", "R": "picture2Size"
+                        "A": "id", "B": "type", "C": "title", "E": "tagsStr", "O": "picture1", "P": "picture2", "Q": "picture1Size", "R": "picture2Size"
                     },
                     fieldsRequiredToConsiderFilledRow: ["id"]
                 })
@@ -63,6 +65,9 @@ export class PicturesLoader {
                     default: type = 'Inconnu';
                 }
 
+                let tags = drawing.tagsStr?_.map(drawing.tagsStr.split(";"), (tag) => tag.trim()):null;
+                tags = _.filter(tags, (tag) => tag);
+
                 let pictureSize = null, picture = null;
                 if (PicturesLoader.isValidPicture(drawing.picture1,drawing.picture1Size)) {
                     pictureSize = drawing.picture1Size;
@@ -75,7 +80,7 @@ export class PicturesLoader {
                 if(pictureSize && picture) {
                     let width = Number(pictureSize.replace(/w=([0-9]+),.*/gi, "$1"));
                     let height = Number(pictureSize.replace(/.*h=([0-9]+),.*/gi, "$1"));
-                    return { id: drawing.id, picture: picture, title: drawing.title, width, height, type };
+                    return { id: drawing.id, picture: picture, title: drawing.title, width, height, type, tags };
                 } else {
                     return null;
                 }
