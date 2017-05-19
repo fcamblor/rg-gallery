@@ -50,13 +50,11 @@ export class PostProcessableSpreadsheetReaderDescriptor<T,T2> extends Spreadshee
 
 export interface ISpreadsheetTabDescriptor<T> {
     tabId: number;
-    dataField: string;
     descriptor: SpreadsheetReaderDescriptor<T>;
 }
 
 export class SpreadsheetTabDescriptor<T> implements ISpreadsheetTabDescriptor<T> {
     tabId: number;
-    dataField: string;
     descriptor: SpreadsheetReaderDescriptor<T>;
 
     constructor(opts: ISpreadsheetTabDescriptor<T>) {

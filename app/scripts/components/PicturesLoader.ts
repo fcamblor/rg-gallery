@@ -48,7 +48,6 @@ export class PicturesLoader {
         return SpreadsheetReader.readFromDescriptors('1P-b2Nirm8fP1nTiNp6WVlbaGm-98jYKsDGpP77B2Jec', [
             new SpreadsheetTabDescriptor({
                 tabId: 1,
-                dataField: "peintures",
                 descriptor: new SpreadsheetReaderDescriptor<GSDrawing>({
                     firstRow: 4,
                     columnFields: {
