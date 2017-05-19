@@ -35,26 +35,28 @@ export class DrawingItem implements PhotoSwipe.Item {
     private _localization: string;
     public get localization(): string{ return this._localization; }
 
-    constructor(drawing: Drawing) {
-        this.src = drawing.picture;
-        this.w = drawing.width;
-        this.h = drawing.height;
-        // this.loadError = drawing.loadError;
-        // this.vGap = drawing.vGap;
-        // this.fitRatio = drawing.fitRatio;
-        // this.initialZoomLevel = drawing.initialZoomLevel;
-        // this.bounds = drawing.bounds;
-        // this.initialPosition = drawing.initialPosition;
-        this._id = drawing.id;
-        this._shortTitle = drawing.title;
-        this._category = drawing.category;
-        this._type = drawing.type;
-        this._date = drawing.date;
-        this._tags = drawing.tags;
-        this._signature = drawing.signature;
-        this._dimensions = drawing.dimensions;
-        this._lastHolder = drawing.lastHolder;
-        this._localization = drawing.localization;
+    constructor(drawing?: Drawing) {
+        if(drawing) {
+            this.src = drawing.picture;
+            this.w = drawing.width;
+            this.h = drawing.height;
+            // this.loadError = drawing.loadError;
+            // this.vGap = drawing.vGap;
+            // this.fitRatio = drawing.fitRatio;
+            // this.initialZoomLevel = drawing.initialZoomLevel;
+            // this.bounds = drawing.bounds;
+            // this.initialPosition = drawing.initialPosition;
+            this._id = drawing.id;
+            this._shortTitle = drawing.title;
+            this._category = drawing.category;
+            this._type = drawing.type;
+            this._date = drawing.date;
+            this._tags = drawing.tags;
+            this._signature = drawing.signature;
+            this._dimensions = drawing.dimensions;
+            this._lastHolder = drawing.lastHolder;
+            this._localization = drawing.localization;
+        }
     }
 
     private _qualifiers: string[];
