@@ -8,7 +8,7 @@ export const PHOTO_SWIPE_HTML = `
     <div class="pswp__bg"></div>
 
     <!-- Slides wrapper with overflow:hidden. -->
-    <div class="pswp__scroll-wrap">
+    <div class="pswp__scroll-wrap with-details">
 
         <!-- Container that holds slides. 
             PhotoSwipe keeps only 3 of them in the DOM to save memory.
