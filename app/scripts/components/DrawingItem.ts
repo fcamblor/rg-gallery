@@ -56,4 +56,25 @@ export class DrawingItem implements PhotoSwipe.Item {
         this._lastHolder = drawing.lastHolder;
         this._localization = drawing.localization;
     }
+
+    private _qualifiers: string[];
+    public get qualifiers() {
+        if(!this._qualifiers) {
+            this._qualifiers = _.flatten([
+                `ID:${this._id}`,
+                `CATEG:${DrawingItem.normalize(this._category)}`,
+                `TITRE:${DrawingItem.normalize(this._shortTitle)}`,
+                `TYPE:${DrawingItem.normalize(this._type)}`,
+                _.map(this._tags, (tag) => `TAG:${DrawingItem.normalize(tag)}`),
+                `DATE:${DrawingItem.normalize(this._date)}`,
+                `TITUL:${DrawingItem.normalize(this._lastHolder)}`,
+                `LOC:${DrawingItem.normalize(this._localization)}`
+            ]);
+        }
+        return this._qualifiers;
+    }
+
+    private static normalize(value: string) {
+        return value.toUpperCase();
+    }
 }
