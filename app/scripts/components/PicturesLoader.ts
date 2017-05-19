@@ -3,6 +3,8 @@ import {
     SpreadsheetTabDescriptor
 } from './SpreadsheetReader';
 
+export type SignatureType = 'Signé'|'Non signé';
+export type DrawingType = string;
 
 interface GSDrawing {
     id: string;
@@ -20,8 +22,6 @@ interface GSDrawing {
     picture2Size: string;
 }
 
-export type SignatureType = 'Signé'|'Non signé';
-export type DrawingType = 'Gouache'|'Huile'|'Fresque'|'Inconnu';
 
 export interface Drawing {
     id: string;
@@ -75,7 +75,10 @@ export class PicturesLoader {
                     case 'H': type = 'Huile'; break;
                     case 'FRESQUE': type = 'Fresque'; break;
                     case 'G': type = 'Gouache'; break;
-                    default: type = 'Inconnu';
+                    case 'CG': type = 'Craie grasse'; break;
+                    case 'EF': type = 'Eau forte'; break;
+                    case 'BG': type = 'Bois gravé'; break;
+                    default: type = drawing.type || "Type inconnu";
                 }
 
                 let tags = drawing.tagsStr?_.map(drawing.tagsStr.split(";"), (tag) => tag.trim()):null;
