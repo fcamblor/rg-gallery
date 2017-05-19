@@ -73,12 +73,13 @@ export class SpreadsheetReader {
         return Promise.all(_.map(descriptors, (spreadsheetTabDescriptor) =>
             $.ajax({
                 url: `https://spreadsheets.google.com/feeds/cells/${spreadsheetId}/${spreadsheetTabDescriptor.tabId}/public/basic?alt=json&v=3.0`,
-                dataType: 'json'
+                dataType: 'jsonp',
+                jsonp: 'callback'
             }).then(
                 result =>
                     new SpreadsheetReader().read(result, spreadsheetTabDescriptor.descriptor),
-                () => {
-                    (errorHandler || console.error)(`Error while fetching spreadsheet info for tab ${spreadsheetTabDescriptor.tabId}`);
+                (...error) => {
+                    (errorHandler || console.error)(`Error while fetching spreadsheet info for tab ${spreadsheetTabDescriptor.tabId} : ${JSON.stringify(error)}`);
                     return Promise.reject(null);
                 }
             )
