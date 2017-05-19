@@ -1,5 +1,6 @@
 import {PicturesLoader} from './components/PicturesLoader';
 import {PicturesGallery} from './components/PicturesGallery';
+import {DrawingItem} from './components/DrawingItem';
 
 
 // register service worker
@@ -24,7 +25,7 @@ if ('serviceWorker' in navigator) {
 
 let picturesLoader = new PicturesLoader();
 picturesLoader.load().then(() => {
-    var drawings = picturesLoader.loadedDrawings();
+    var drawings = _.map(picturesLoader.loadedDrawings(), (drawing) => new DrawingItem(drawing));
 
     new PicturesGallery($("#gallery")).fillWith(drawings);
 });

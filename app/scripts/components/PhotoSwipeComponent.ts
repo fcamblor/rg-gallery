@@ -1,16 +1,5 @@
 import {PHOTO_SWIPE_HTML} from './PhotoSwipeHTML';
-import {Category, Drawing, PicturesLoader, SignatureType} from './PicturesLoader';
-
-interface DrawingItem extends PhotoSwipe.Item {
-    category: Category;
-    type: string;
-    date?: string;
-    tags: string[];
-    signature: SignatureType;
-    dimensions: string;
-    lastHolder: string;
-    localization: string;
-}
+import {DrawingItem} from './DrawingItem';
 
 interface Binding {
     attr: string;
@@ -23,20 +12,13 @@ export class PhotoSwipeComponent {
 
     private photoSwipe: PhotoSwipe<PhotoSwipeUI_Default.Options>;
 
-    constructor(private $el: JQuery, private drawings: Drawing[]) {
+    constructor(private $el: JQuery, private drawings: DrawingItem[]) {
         this.$el.html(PHOTO_SWIPE_HTML);
     }
 
     open(options: PhotoSwipe.Options){
         this.photoSwipe = new PhotoSwipe(this.$el.find(".pswp").get(0), PhotoSwipeUI_Default,
-            _.map<Drawing, DrawingItem>(this.drawings, (drawing, index) => {
-                return {
-                    src: drawing.picture, w: drawing.width, h: drawing.height, title: `#${drawing.id} ${drawing.title}`,
-                    category: drawing.category, type: drawing.type, tags: drawing.tags,
-                    date: drawing.date, signature: drawing.signature, dimensions: drawing.dimensions,
-                    lastHolder: drawing.lastHolder, localization: drawing.localization
-                };
-            }),
+            this.drawings,
             options
         );
         this.photoSwipe.init();

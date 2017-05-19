@@ -1,29 +1,29 @@
 
 
-import {Drawing} from './PicturesLoader';
 import {PhotoSwipeComponent} from "./PhotoSwipeComponent";
+import {DrawingItem} from './DrawingItem';
 
 export class PicturesGallery {
-    private drawings: Drawing[];
+    private drawings: DrawingItem[];
     constructor(private $el: JQuery) {
     }
 
-    fillWith(drawings: Drawing[]){
+    fillWith(drawings: DrawingItem[]){
         this.drawings = drawings;
 
         $(_.map(drawings, (drawing, index) => {
-            let orientation = drawing.width>drawing.height?'landscape':'portrait';
+            let orientation = drawing.w>drawing.h?'landscape':'portrait';
             let style = '';
             if(orientation === 'landscape') {
-                style = 'padding-top:'+((100-(100*drawing.height/drawing.width))/2)+'%';
+                style = 'padding-top:'+((100-(100*drawing.h/drawing.w))/2)+'%';
             } else {
-                style = 'padding-left:'+((100-(100*drawing.width/drawing.height))/2)+'%';
+                style = 'padding-left:'+((100-(100*drawing.w/drawing.h))/2)+'%';
             }
             return `
                 <div class="box">
-                  <div class="boxInner ${orientation}" style="${style}" data-size="${drawing.width}x${drawing.height}">
-                    <img src="${drawing.picture}" data-img-index="${index}"/>
-                    <div class="titleBox">#${drawing.id} ${drawing.title}</div>
+                  <div class="boxInner ${orientation}" style="${style}" data-size="${drawing.w}x${drawing.h}">
+                    <img src="${drawing.src}" data-img-index="${index}"/>
+                    <div class="titleBox">#${drawing.title}</div>
                   </div>
                 </div>
             `;
