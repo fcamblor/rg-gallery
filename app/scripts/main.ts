@@ -4,7 +4,20 @@ import {PicturesGallery} from './components/PicturesGallery';
 
 // register service worker
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw-cache-images.js', { scope: './' })
+    // Unregistering old sw-cache-images service worker
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        _.each(registrations, (registration) => {
+            if(_.get(registration, 'active.scriptURL', '').indexOf('sw-cache-images') !== -1) {
+                registration.unregister().then(function(register){
+                    console.info("Old service worker unregistered successfully : "+register);
+                }, function(error){
+                    console.error("Old service worker unregistration failed : "+error);
+                });
+            }
+        });
+    });
+
+    navigator.serviceWorker.register($("head base").attr('href')+'sw-cached-resources.js', { scope: $("head base").attr('href') })
         .then((reg) => console.log('SW Registration succeeded. Scope is ' + reg.scope))
         .catch((error, ...args) => console.error('Error when registering service worker', error, args));
 }
