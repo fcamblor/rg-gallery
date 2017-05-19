@@ -6,7 +6,8 @@
     "requirejs": "2.3.3",
     "jquery": "1.10.2",
     "lodash": "3.10.1",
-    "es6-promise": "^4.0.5"
+    "es6-promise": "4.0.5",
+    "chosen": "1.7.0"
   },
   "devDependencies": {},
   "buildConfig": {
