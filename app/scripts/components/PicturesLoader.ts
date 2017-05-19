@@ -114,6 +114,8 @@ export class PicturesLoader {
                     let tags = drawing.tagsStr?_.map(drawing.tagsStr.split(";"), (tag) => tag.trim()):null;
                     tags = _.filter(tags, (tag) => tag);
 
+                    let title = drawing.title || "Titre inconnu";
+
                     let date = drawing.date || "Date inconnue";
 
                     let signature: SignatureType = (drawing.signature && drawing.signature.toUpperCase() === 'OUI')?'Signé':'Non signé';
@@ -136,7 +138,7 @@ export class PicturesLoader {
                     if(pictureSize && picture) {
                         let width = Number(pictureSize.replace(/w=([0-9]+),.*/gi, "$1"));
                         let height = Number(pictureSize.replace(/.*h=([0-9]+),.*/gi, "$1"));
-                        return { id: drawing.id, category, picture: picture, title: drawing.title, width, height, type, tags, date, signature, dimensions, lastHolder, localization };
+                        return { id: drawing.id, category, picture: picture, title, width, height, type, tags, date, signature, dimensions, lastHolder, localization };
                     } else {
                         return null;
                     }
