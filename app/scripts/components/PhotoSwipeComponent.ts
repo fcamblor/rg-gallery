@@ -1,7 +1,8 @@
 import {PHOTO_SWIPE_HTML} from './PhotoSwipeHTML';
-import {Drawing, PicturesLoader, SignatureType} from './PicturesLoader';
+import {Category, Drawing, PicturesLoader, SignatureType} from './PicturesLoader';
 
 interface DrawingItem extends PhotoSwipe.Item {
+    category: Category;
     type: string;
     date?: string;
     tags: string[];
@@ -31,7 +32,8 @@ export class PhotoSwipeComponent {
             _.map<Drawing, DrawingItem>(this.drawings, (drawing, index) => {
                 return {
                     src: drawing.picture, w: drawing.width, h: drawing.height, title: `#${drawing.id} ${drawing.title}`,
-                    type: drawing.type, tags: drawing.tags, date: drawing.date, signature: drawing.signature, dimensions: drawing.dimensions,
+                    category: drawing.category, type: drawing.type, tags: drawing.tags,
+                    date: drawing.date, signature: drawing.signature, dimensions: drawing.dimensions,
                     lastHolder: drawing.lastHolder, localization: drawing.localization
                 };
             }),
@@ -52,6 +54,7 @@ export class PhotoSwipeComponent {
     showDetailsFor(drawing: DrawingItem) {
         let $container = $((<any>this.photoSwipe).scrollWrap);
         _.each([
+            { attr: 'category', selector: '.drawing_category', elAttribute: 'text' },
             { attr: 'type', selector: '.drawing_type', elAttribute: 'text' },
             { attr: 'date', selector: '.drawing_date', elAttribute: 'text' },
             { attr: 'signature', selector: '.drawing_signature', elAttribute: 'text' },
