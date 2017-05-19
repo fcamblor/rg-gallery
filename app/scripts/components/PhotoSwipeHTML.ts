@@ -21,6 +21,12 @@ export const PHOTO_SWIPE_HTML = `
         
         <div class="details">
             <div>
+                <label>ID</label> : <div class="tag drawing_id"></div>
+            </div>
+            <div>
+                <label>Titre</label> : <div class="tag drawing_shortTitle"></div>
+            </div>
+            <div>
                 <label>Catégorie</label> : <div class="tag drawing_category"></div>
             </div>
             <div>

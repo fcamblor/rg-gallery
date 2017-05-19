@@ -43,6 +43,8 @@ export class PhotoSwipeComponent {
     showDetailsFor(drawing: DrawingItem) {
         let $container = $((<any>this.photoSwipe).scrollWrap);
         _.each([
+            { attr: 'id', selector: '.drawing_id', elAttribute: 'text' },
+            { attr: 'shortTitle', selector: '.drawing_shortTitle', elAttribute: 'text' },
             { attr: 'category', selector: '.drawing_category', elAttribute: 'text' },
             { attr: 'type', selector: '.drawing_type', elAttribute: 'text' },
             { attr: 'date', selector: '.drawing_date', elAttribute: 'text' },
