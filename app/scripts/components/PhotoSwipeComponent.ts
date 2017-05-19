@@ -44,6 +44,13 @@ export class PhotoSwipeComponent {
         this.photoSwipe.listen('afterChange', () => {
             this.showDetailsFor(<DrawingItem>this.photoSwipe.currItem);
         });
+        // Better listen on photoSwipe's destroy event than make this stuff in this.destroy()
+        // as I guess this.photoSwipe.destroy() will be called when we close photoswipe (whereas
+        // this.destroy() won't at that time)
+        this.photoSwipe.listen('destroy', () => {
+            this.$el.find(".pswp .pswp__button--info").off('click');
+            this.photoSwipe = null;
+        });
         this.showDetailsFor(<DrawingItem>this.photoSwipe.currItem);
 
         this.$el.find(".pswp .pswp__button--info").click((event) => {
@@ -78,9 +85,7 @@ export class PhotoSwipeComponent {
 
     destroy() {
         if(this.photoSwipe) {
-            this.$el.find(".pswp .pswp__button--info").off('click');
             this.photoSwipe.destroy();
-            this.photoSwipe = null;
         }
     }
 }
