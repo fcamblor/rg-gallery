@@ -1,4 +1,5 @@
-// this is the service worker which intercepts all http requests
+var _self = this;
+
 var isLocal = function(url){ return url.indexOf('localhost') !== -1; };
 var isAsset = function(url){ return url[url.length-1]==='/' || url.indexOf('index.html') !== -1 || url.indexOf('scripts/') !== -1 || url.indexOf('styles/') !== -1 || url.indexOf('bower_components/') !== -1; };
 var isPicture = function(url){ return url.indexOf('r-gounot.fr') !== -1 && !isAsset(url); };
@@ -74,4 +75,11 @@ this.addEventListener('fetch', function fetcher (event) {
         );
     }
     // otherwise: ignore event
+});
+
+// Essentially we don't want to require the user to refresh the page for the service worker to begin — we want
+// the service worker to activate upon initial page load.
+_self.addEventListener('activate', function(event) {
+    // Calling claim() to force a "controllerchange" event on navigator.serviceWorker
+    event.waitUntil(_self.clients.claim());
 });

@@ -34,6 +34,18 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register($("head base").attr('href')+'sw-cached-resources.js', { scope: $("head base").attr('href') })
         .then((reg) => console.log('SW Registration succeeded. Scope is ' + reg.scope))
         .catch((error, ...args) => console.error('Error when registering service worker', error, args));
+
+    // Listen for claiming of our ServiceWorker
+    navigator.serviceWorker.addEventListener('controllerchange', function(event) {
+        // Listen for changes in the state of our ServiceWorker, triggered by SW's activate event
+        navigator.serviceWorker.controller.addEventListener('statechange', function() {
+            // If the ServiceWorker becomes "activated", let the user know the page will reload...
+            if (this.state === 'activated') {
+                alert("Detected Service worker update... reloading the page to take it into consideration...");
+                document.location.reload(true);
+            }
+        });
+    });
 }
 
 let picturesLoader = new PicturesLoader();
