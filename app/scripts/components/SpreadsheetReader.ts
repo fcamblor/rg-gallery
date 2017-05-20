@@ -74,7 +74,15 @@ export class SpreadsheetReader {
             $.ajax({
                 url: `https://spreadsheets.google.com/feeds/cells/${spreadsheetId}/${spreadsheetTabDescriptor.tabId}/public/basic?alt=json&v=3.0`,
                 dataType: 'jsonp',
-                jsonp: 'callback'
+                cache: true,
+                jsonp: 'callback',
+                // Using unique jsonp callback names here because if multiple descriptors are called with jsonp,
+                // we need to provide different callback names for each
+                // and on the other hand, we don't want to have a jquery-generated callback name because it won't be
+                // cacheable by service worker
+                jsonpCallback: `___clbk_${spreadsheetId.replace(/-/gi, '_')}_${spreadsheetTabDescriptor.tabId}`,
+                crossDomain: true,
+                async: false
             }).then(
                 result =>
                     new SpreadsheetReader().read(result, spreadsheetTabDescriptor.descriptor),
