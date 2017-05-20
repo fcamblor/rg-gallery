@@ -69,7 +69,7 @@ export class DrawingItem implements PhotoSwipe.Item {
                 `TYPE:${DrawingItem.normalize(this._type)}`,
                 _.map(this._tags, (tag) => `TAG:${DrawingItem.normalize(tag)}`),
                 `DATE:${DrawingItem.normalize(this._date)}`,
-                `TITUL:${DrawingItem.normalize(this._lastHolder)}`,
+                `DETENT:${DrawingItem.normalize(this._lastHolder)}`,
                 `LOC:${DrawingItem.normalize(this._localization)}`
             ]);
         }
