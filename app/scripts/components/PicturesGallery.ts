@@ -111,13 +111,23 @@ export class PicturesGallery {
             }
         });
 
-        let $elsToShow = this.$el.find(showSelectors.join(","));
-        $elsToShow.removeClass("hidden");
-        setTimeout(() => $elsToShow.removeClass('visuallyhidden'), 20);
+        console.log("Number of els to show="+showSelectors.length+", to hide="+hideSelectors.length);
+        if(showSelectors.length) {
+            let $elsToShow = this.$el.find(showSelectors.join(","));
+            $elsToShow.removeClass("hidden");
+            setTimeout(() => {
+                $elsToShow.removeClass('visuallyhidden');
+            }, 20);
+        }
 
-        let $elsToHide = this.$el.find(hideSelectors.join(","));
-        $elsToHide.addClass("visuallyhidden");
-        $elsToHide.one('transitionend', () => $elsToHide.addClass('hidden'));
+        if(hideSelectors.length) {
+            let $elsToHide = this.$el.find(hideSelectors.join(","));
+            $elsToHide.addClass("visuallyhidden");
+            $(hideSelectors[0]).one('transitionend', () => {
+                console.log("End of transition !");
+                $elsToHide.addClass('hidden');
+            });
+        }
 
         this.fillSearchCriteria();
     }
