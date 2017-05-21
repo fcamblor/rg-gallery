@@ -19,8 +19,10 @@ interface GSDrawing {
     localization: string;
     picture1: string;
     picture2: string;
+    thumbnail: string;
     picture1Size: string;
     picture2Size: string;
+    thumbnailSize: string;
 }
 
 type GSDrawingByCategory = {[category in Category]: GSDrawing[]};
@@ -32,6 +34,9 @@ export interface Drawing {
     picture: string;
     width: number;
     height: number;
+    thumbnail: string;
+    thumbnailWidth: number;
+    thumbnailHeight: number;
     type: DrawingType;
     date?: string;
     signature: SignatureType;
@@ -56,7 +61,8 @@ export class PicturesLoader {
                     columnFields: {
                         "A": "id", "B": "type", "C": "title", "E": "tagsStr", "F": "date", "G": "signature",
                         "H": "dimensions", "J": "lastHolder", "L": "localization",
-                        "O": "picture1", "P": "picture2", "Q": "picture1Size", "R": "picture2Size"
+                        "O": "picture1", "P": "picture2", "Q": "thumbnail",
+                        "R": "picture1Size", "S": "picture2Size", "T": "thumbnailSize"
                     },
                     fieldsRequiredToConsiderFilledRow: ["id"]
                 })
@@ -93,7 +99,7 @@ export class PicturesLoader {
             };
 
             console.log(results.length);
-            console.log(_.reduce(this.drawings, (acc, drawings) => acc + drawings.length, 0));
+            console.log(_.reduce(this.drawings, (acc, drawings) => acc + (drawings?drawings.length:0), 0));
         });
     }
 
@@ -126,7 +132,7 @@ export class PicturesLoader {
 
                     let localization = drawing.localization || "Localisation inconnu";
 
-                    let pictureSize = null, picture: string = null;
+                    let pictureSize = null, picture: string = null, thumbnail: string = null, thumbnailSize: string = null;
                     if (PicturesLoader.isValidPicture(drawing.picture1,drawing.picture1Size)) {
                         pictureSize = drawing.picture1Size;
                         picture = drawing.picture1;
@@ -135,10 +141,23 @@ export class PicturesLoader {
                         pictureSize = drawing.picture2Size;
                         picture = drawing.picture2;
                     }
+
+                    thumbnailSize = drawing.thumbnailSize;
+                    thumbnail = drawing.thumbnail;
+
                     if(pictureSize && picture) {
                         let width = Number(pictureSize.replace(/w=([0-9]+),.*/gi, "$1"));
                         let height = Number(pictureSize.replace(/.*h=([0-9]+),.*/gi, "$1"));
-                        return { id: drawing.id, category, picture: picture, title, width, height, type, tags, date, signature, dimensions, lastHolder, localization };
+                        let thumbnailWidth, thumbnailHeight;
+                        if(thumbnailSize) {
+                            thumbnailWidth = Number(thumbnailSize.replace(/w=([0-9]+),.*/gi, "$1"));
+                            thumbnailHeight = Number(thumbnailSize.replace(/.*h=([0-9]+),.*/gi, "$1"));
+                        } else {
+                            thumbnail = null;
+                            console.warn("No thumbnail found for picture with id "+drawing.id);
+                        }
+
+                        return { id: drawing.id, category, picture: picture, title, width, height, type, tags, date, signature, dimensions, lastHolder, localization, thumbnail, thumbnailWidth, thumbnailHeight };
                     } else {
                         return null;
                     }

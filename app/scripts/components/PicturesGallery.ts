@@ -44,7 +44,7 @@ export class PicturesGallery {
                 return `
                     <div class="box">
                       <div class="boxInner ${orientation}" style="${style}" data-size="${drawing.w}x${drawing.h}">
-                        <img src="${drawing.src}" data-img-index="${index}"/>
+                        <img src="${drawing.msrc}" data-img-index="${index}"/>
                         <div class="titleBox">#${drawing.title}</div>
                       </div>
                     </div>

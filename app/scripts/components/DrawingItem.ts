@@ -3,6 +3,7 @@ import {Category, Drawing, SignatureType} from './PicturesLoader';
 export class DrawingItem implements PhotoSwipe.Item {
     // From PhotoSwipe
     src: string;
+    msrc: string;
     w: number;
     h: number;
     loadError?: boolean;
@@ -34,12 +35,17 @@ export class DrawingItem implements PhotoSwipe.Item {
     public get lastHolder(): string{ return this._lastHolder; }
     private _localization: string;
     public get localization(): string{ return this._localization; }
+    private _thumbnailWidth: number;
+    public get thumbnailWidth(): number{ return this._thumbnailWidth; }
+    private _thumbnailHeight: number;
+    public get thumbnailHeight(): number{ return this._thumbnailHeight; }
 
     constructor(drawing?: Drawing) {
         if(drawing) {
             this.src = drawing.picture;
             this.w = drawing.width;
             this.h = drawing.height;
+            this.msrc = drawing.thumbnail;
             // this.loadError = drawing.loadError;
             // this.vGap = drawing.vGap;
             // this.fitRatio = drawing.fitRatio;
@@ -56,6 +62,8 @@ export class DrawingItem implements PhotoSwipe.Item {
             this._dimensions = drawing.dimensions;
             this._lastHolder = drawing.lastHolder;
             this._localization = drawing.localization;
+            this._thumbnailWidth = drawing.thumbnailWidth;
+            this._thumbnailHeight = drawing.thumbnailHeight;
         }
     }
 
