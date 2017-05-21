@@ -74,7 +74,8 @@ export class PicturesLoader {
                     columnFields: {
                         "A": "id", "B": "type", "C": "title", "E": "tagsStr", "F": "date", "G": "signature",
                         "H": "dimensions", "J": "lastHolder", "L": "localization",
-                        "O": "picture1", "P": "picture2", "Q": "picture1Size", "R": "picture2Size"
+                        "O": "picture1", "P": "picture2", "Q": "thumbnail",
+                        "R": "picture1Size", "S": "picture2Size", "T": "thumbnailSize"
                     },
                     fieldsRequiredToConsiderFilledRow: ["id"]
                 })
@@ -86,7 +87,8 @@ export class PicturesLoader {
                     columnFields: {
                         "A": "id", "B": "type", "C": "title", "E": "tagsStr", "F": "date", "G": "signature",
                         "H": "dimensions", "J": "lastHolder", "L": "localization",
-                        "O": "picture1", "P": "picture2", "Q": "picture1Size", "R": "picture2Size"
+                        "O": "picture1", "P": "picture2", "Q": "thumbnail",
+                        "R": "picture1Size", "S": "picture2Size", "T": "thumbnailSize"
                     },
                     fieldsRequiredToConsiderFilledRow: ["id"]
                 })
