@@ -1,7 +1,8 @@
-
-
 import {PhotoSwipeComponent} from "./PhotoSwipeComponent";
 import {DrawingItem} from './DrawingItem';
+import {PictureIds, Store} from './Store';
+
+declare var Q: any;
 
 class FilteredDrawingItem extends DrawingItem {
     constructor(drawingItem: DrawingItem, public initialListIndex: number) {
@@ -9,6 +10,8 @@ class FilteredDrawingItem extends DrawingItem {
         _.extend(this, drawingItem);
     }
 }
+
+type LoadingPictureResult = {result: "ok"|"error", pictureUrl: string};
 
 export class PicturesGallery {
     private drawings: DrawingItem[];
@@ -85,7 +88,80 @@ export class PicturesGallery {
     }
 
     initPreloadedPictures() {
+        this._preloadablePicturesIds().then((results) => {
+            if(results.preloadablePictureIds.length) {
+                this.$el.find("#preload-pictures-section").html(`${results.preloadablePictureIds.length} oeuvre(s) pourrai(en)t être chargée(s) en cache pour ensuite être visible(s) hors ligne. <button id="preload-pictures-btn">Précharger</button>`);
+                this.$el.find("#preload-pictures-btn").click(() => this.preloadPictures());
+            }
+        });
+    }
 
+    private _preloadablePicturesIds(): Promise<{preloadablePictureIds: PictureIds, preloadedPictureIds: PictureIds}> {
+        return Store.INSTANCE.loadPreloadedPictures().then((_preloadedPictures: PictureIds) => {
+            let preloadedPictureIds = _preloadedPictures || [];
+            return {
+                preloadablePictureIds:_(this.drawings).pluck("id").filter((pictureId: string) => preloadedPictureIds.indexOf(pictureId) === -1).value(),
+                preloadedPictureIds
+            };
+        });
+    }
+
+    preloadPictures() {
+        let $btn = this.$el.find("#preload-pictures-btn");
+        let picturesById: {[id:string]: DrawingItem } = _(this.drawings).groupBy('id').mapValues(drawings => drawings[0]).value();
+        this._preloadablePicturesIds().then((results) => {
+            let preloadedPictures = results.preloadedPictureIds, preloadingPictureErrors = [];
+            let intervalId = setInterval(() => {
+                $btn.text(`Chargement ${preloadedPictures.length + preloadingPictureErrors.length}/${results.preloadablePictureIds.length}...`);
+                Store.INSTANCE.savePreloadedPictures(preloadedPictures);
+            }, 1000);
+
+            _(results.preloadablePictureIds).chunk(5).reduce((previousPromise: Promise<any>, pictureIds: PictureIds) => {
+                return previousPromise.then(() => {
+                    return Q.all(_.map(pictureIds, (pictureId) => {
+                        return this._loadPictureURL(picturesById[pictureId].src).then((res) => {
+                            if(res.result === 'ok') {
+                                preloadedPictures.push(pictureId);
+                            } else /* if(res.result === 'error') */ {
+                                preloadingPictureErrors.push(pictureId);
+                            }
+                            return null;
+                        });
+                    }));
+                });
+            }, Q.resolve(null)).then(function(){
+                console.log("Finished pre-loading everything !");
+                clearInterval(intervalId);
+                return Store.INSTANCE.savePreloadedPictures(preloadedPictures);
+            }).then(() => {
+                this.$el.find("#preload-pictures-section").hide();
+            });
+        });
+    }
+
+    private _loadPictureURL(pictureUrl: string): Promise<LoadingPictureResult> {
+        var defer = Q.defer();
+
+        let isResolved = false;
+        var img = new Image();
+        img.onload = function() {
+            defer.resolve({result: "ok", pictureUrl });
+            isResolved = true;
+        };
+        img.onerror = function(){
+            console.error("Error loading image url : "+pictureUrl);
+            isResolved = true;
+            defer.resolve({result: "error", pictureUrl });
+        };
+        img.src = pictureUrl;
+        setTimeout(function(){
+            if(!isResolved) {
+                console.info("Forced error for image url : "+pictureUrl);
+                defer.resolve({ result: "error", pictureUrl });
+            }
+        }, 10000);
+
+        return defer.promise;
     }
 
     initDuplicateIds() {
