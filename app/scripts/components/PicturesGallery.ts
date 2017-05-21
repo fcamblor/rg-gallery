@@ -29,6 +29,12 @@ export class PicturesGallery {
             .value();
 
         $(_([])
+            .concat(`<div id="top-section">
+                        <div id="hello-section"></div>
+                        <div id="preload-pictures-section"></div>
+                        <div id="duplicate-ids-section" style="color: red"></div>
+                        <hr/>
+                     </div>`)
             .concat(`<div>Critères de recherche: ${searchCriteriaNames.join(", ")}</div>`)
             .concat(`<select class="searchCriteria" style="width: 100%" multiple="true" data-placeholder="Critres de recherche"></select>`)
             .concat(`<hr/>`)
@@ -68,6 +74,30 @@ export class PicturesGallery {
         }
 
         this.$el.find('img').click((event) => this.openPhotoSwipe(Number($(event.currentTarget).attr('data-img-index'))));
+
+        this.initUser();
+        this.initDuplicateIds();
+        this.initPreloadedPictures();
+    }
+
+    initUser() {
+
+    }
+
+    initPreloadedPictures() {
+
+    }
+
+    initDuplicateIds() {
+        let duplicateIds: {id: string, count: number}[] = _(this.drawings)
+            .countBy('id')
+            .map((count, id) => { return {id, count}; })
+            .filter((item) => item.count > 1)
+            .value();
+
+        if(duplicateIds.length) {
+            this.$el.find("#duplicate-ids-section").html(`Des identifiants en doublon ont été détectés : ${_.map(duplicateIds, (item) => `${item.id} (${item.count})`).join(", ")}`);
+        }
     }
 
     fillSearchCriteria() {
