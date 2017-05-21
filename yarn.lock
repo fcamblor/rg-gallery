@@ -18,6 +18,10 @@
   version "4.0.27"
   resolved "https://registry.yarnpkg.com/@types/photoswipe/-/photoswipe-4.0.27.tgz#3456af363f616334ebfedf3784a7d9be6ff39f6c"
 
+"@types/q@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/q/-/q-1.0.0.tgz#57e5465d665b370d4217e69b344b20faa6b724f5"
+
 abbrev@1, abbrev@~1.0.4:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.0.9.tgz#91b4792588a7738c25f35dd6f63752a2f8776135"
