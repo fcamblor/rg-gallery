@@ -48,6 +48,9 @@ export const PHOTO_SWIPE_HTML = `
                 <label>Dimensions (en cm)</label> : <div class="inline drawing_dimensions"></div>
             </div>
             <div>
+                <label>Nom fichier</label> : <div class="inline drawing_filename"></div>
+            </div>
+            <div>
                 <label>Mots-clefs</label> : <div class="multiple-tags drawing_tags"></div>
             </div>
         </div>

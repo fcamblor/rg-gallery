@@ -52,6 +52,7 @@ export class PhotoSwipeComponent {
             { attr: 'dimensions', selector: '.drawing_dimensions', elAttribute: 'text' },
             { attr: 'lastHolder', selector: '.drawing_lastHolder', elAttribute: 'text' },
             { attr: 'localization', selector: '.drawing_localization', elAttribute: 'text' },
+            { attr: 'src', selector: '.drawing_filename', elAttribute: 'text', converter: (src: string) => _.last(src.split("/")) },
             { attr: 'tags', selector: '.drawing_tags', elAttribute: 'html', converter: (tags: string[]) => _.map(tags, (tag) => `<div class="tag">${tag}</div>`).join("") }
         ], (binding: Binding) => {
             let $el = $container.find(binding.selector);
