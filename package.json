@@ -17,6 +17,7 @@
     "@types/es6-promise": "^0.0.32",
     "@types/jquery": "1.10.31",
     "@types/lodash": "3.10.1",
+    "@types/moment": "2.13.0",
     "@types/photoswipe": "^4.0.27",
     "@types/q": "1.0.0",
     "bower": "1.8.4",
@@ -48,6 +49,7 @@
     "jshint-stylish": "0.1.3",
     "load-grunt-tasks": "0.2.0",
     "localforage": "1.5.0",
+    "momentjs": "2.0.0",
     "requirejs": "2.1.11",
     "time-grunt": "0.2.1",
     "typescript": "2.2.2"
