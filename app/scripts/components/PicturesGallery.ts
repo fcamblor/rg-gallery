@@ -100,7 +100,7 @@ export class PicturesGallery {
         return Store.INSTANCE.loadPreloadedPictures().then((_preloadedPictures: PictureIds) => {
             let preloadedPictureIds = _preloadedPictures || [];
             return {
-                preloadablePictureIds:_(this.drawings).pluck("id").filter((pictureId: string) => preloadedPictureIds.indexOf(pictureId) === -1).value(),
+                preloadablePictureIds:_(this.drawings).pluck<string>("id").filter((pictureId: string) => preloadedPictureIds.indexOf(pictureId) === -1).value(),
                 preloadedPictureIds
             };
         });
