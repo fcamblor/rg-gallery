@@ -5,7 +5,7 @@ import {
 
 export type SignatureType = 'Signé'|'Non signé';
 export type DrawingType = string;
-export type Category = 'Peintures'|'Dessins'|'Estampes';
+export type Category = 'Peintures'|'Dessins'|'Estampes'|'Divers'|'Repros';
 
 interface GSDrawing {
     id: string;
@@ -92,12 +92,40 @@ export class PicturesLoader {
                     },
                     fieldsRequiredToConsiderFilledRow: ["id"]
                 })
+            }),
+            new SpreadsheetTabDescriptor({
+                tabId: 4,
+                descriptor: new SpreadsheetReaderDescriptor<GSDrawing>({
+                    firstRow: 4,
+                    columnFields: {
+                        "A": "id", "B": "type", "C": "title", "E": "tagsStr", "F": "date", "G": "signature",
+                        "H": "dimensions", "J": "lastHolder", "L": "localization",
+                        "O": "picture1", "P": "picture2", "Q": "thumbnail",
+                        "R": "picture1Size", "S": "picture2Size", "T": "thumbnailSize"
+                    },
+                    fieldsRequiredToConsiderFilledRow: ["id"]
+                })
+            }),
+            new SpreadsheetTabDescriptor({
+                tabId: 5,
+                descriptor: new SpreadsheetReaderDescriptor<GSDrawing>({
+                    firstRow: 4,
+                    columnFields: {
+                        "A": "id", "B": "type", "C": "title", "E": "tagsStr", "F": "date", "G": "signature",
+                        "H": "dimensions", "J": "lastHolder", "L": "localization",
+                        "O": "picture1", "P": "picture2", "Q": "thumbnail",
+                        "R": "picture1Size", "S": "picture2Size", "T": "thumbnailSize"
+                    },
+                    fieldsRequiredToConsiderFilledRow: ["id"]
+                })
             })
         ]).then(results => {
             this.drawings = {
-                'Peintures': results[0][0],
-                'Dessins': results[0][1],
-                'Estampes': results[0][2]
+                'Dessins': results[0][0],
+                'Estampes': results[0][1],
+                'Divers': results[0][2],
+                'Repros': results[0][3],
+                'Peintures': results[0][4]
             };
 
             console.log(results.length);
@@ -159,7 +187,13 @@ export class PicturesLoader {
                             console.warn("No thumbnail found for picture with id "+drawing.id);
                         }
 
-                        return { id: drawing.id, category, picture: picture, title, width, height, type, tags, date, signature, dimensions, lastHolder, localization, thumbnail, thumbnailWidth, thumbnailHeight };
+                        return {
+                            id: drawing.id,
+                            category,
+                            picture: picture,
+                            title, width, height, type, tags, date, signature, dimensions, lastHolder, localization,
+                            thumbnail, thumbnailWidth, thumbnailHeight
+                        };
                     } else {
                         return null;
                     }
