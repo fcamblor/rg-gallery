@@ -35,6 +35,7 @@ export class PicturesGallery {
             .concat(`<div id="top-section">
                         <div id="hello-section"></div>
                         <div id="preload-pictures-section"></div>
+                        <div id="invalidate-preload-pictures-section"></div>
                         <div id="duplicate-ids-section" style="color: red"></div>
                         <hr/>
                      </div>`)
@@ -93,6 +94,10 @@ export class PicturesGallery {
                 this.$el.find("#preload-pictures-section").html(`${results.preloadablePictureIds.length} oeuvre(s) pourrai(en)t être chargée(s) en cache pour ensuite être visible(s) hors ligne. <button id="preload-pictures-btn">Précharger</button>`);
                 this.$el.find("#preload-pictures-btn").click(() => this.preloadPictures());
             }
+            if(results.preloadedPictureIds.length) {
+                this.$el.find("#invalidate-preload-pictures-section").html(`${results.preloadedPictureIds.length} oeuvre(s) peu(ven)t être supprimée(s) du cache hors ligne. <button id="invalidate-preload-pictures-btn">Invalider le cache</button>`);
+                this.$el.find("#invalidate-preload-pictures-btn").click(() => this.invalidatePreloadedPictures());
+            }
         });
     }
 
@@ -104,6 +109,18 @@ export class PicturesGallery {
                 preloadedPictureIds
             };
         });
+    }
+
+    invalidatePreloadedPictures() {
+        navigator.serviceWorker.controller.postMessage({'action':'invalidate-preloaded-pictures'});
+        let onPreloadedPicturesInvalidated = (event: Event) => {
+            alert(`Des oeuvre(s) ont été supprimée(s) du cache hors ligne !`);
+
+            window.removeEventListener('preloaded-pictures-invalidated', onPreloadedPicturesInvalidated);
+            // Refreshing page
+            window.location.reload(true);
+        };
+        window.addEventListener('preloaded-pictures-invalidated', onPreloadedPicturesInvalidated);
     }
 
     preloadPictures() {
