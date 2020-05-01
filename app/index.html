@@ -51,7 +51,10 @@
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="scripts/ts-app.js"></script>
     <!-- endbuild -->
-    <script type="text/javascript">require(['main'], function(){ console.log("Application started !"); });</script>
+    <script src="config/rg-config.js"></script>
+    <script type="text/javascript">
+      require(['main'], function(){ console.log("Application started !"); });
+    </script>
     <script type="text/javascript">
         $(function(){
             // See if this is a touch device

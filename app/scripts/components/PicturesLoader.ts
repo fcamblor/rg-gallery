@@ -7,6 +7,23 @@ export type SignatureType = 'Signé'|'Non signé';
 export type DrawingType = string;
 export type Category = 'Peintures'|'Dessins'|'Estampes'|'Divers'|'Repros';
 
+declare global {
+    interface Window {
+        gallConfig: {
+            spreadsheetId: string;
+            spreadsheetDescriptors: {
+                tabId: number;
+                category: string;
+                descriptor: {
+                    firstRow: number;
+                    columnFields: {[key: string]: string};
+                    fieldsRequiredToConsiderFilledRow: string[];
+                }
+            }[]
+        }
+    }
+}
+
 interface GSDrawing {
     id: string;
     title: string;
@@ -53,80 +70,16 @@ export class PicturesLoader {
     }
 
     load(): Promise<void>{
-        return SpreadsheetReader.readFromDescriptors('1P-b2Nirm8fP1nTiNp6WVlbaGm-98jYKsDGpP77B2Jec', [
+        return SpreadsheetReader.readFromDescriptors(window.gallConfig.spreadsheetId, window.gallConfig.spreadsheetDescriptors.map(descriptor =>
             new SpreadsheetTabDescriptor({
-                tabId: 1,
-                descriptor: new SpreadsheetReaderDescriptor<GSDrawing>({
-                    firstRow: 4,
-                    columnFields: {
-                        "A": "id", "B": "type", "C": "title", "E": "tagsStr", "F": "date", "G": "signature",
-                        "H": "dimensions", "J": "lastHolder", "L": "localization",
-                        "O": "picture1", "P": "picture2", "Q": "thumbnail",
-                        "R": "picture1Size", "S": "picture2Size", "T": "thumbnailSize"
-                    },
-                    fieldsRequiredToConsiderFilledRow: ["id"]
-                })
-            }),
-            new SpreadsheetTabDescriptor({
-                tabId: 2,
-                descriptor: new SpreadsheetReaderDescriptor<GSDrawing>({
-                    firstRow: 4,
-                    columnFields: {
-                        "A": "id", "B": "type", "C": "title", "E": "tagsStr", "F": "date", "G": "signature",
-                        "H": "dimensions", "J": "lastHolder", "L": "localization",
-                        "O": "picture1", "P": "picture2", "Q": "thumbnail",
-                        "R": "picture1Size", "S": "picture2Size", "T": "thumbnailSize"
-                    },
-                    fieldsRequiredToConsiderFilledRow: ["id"]
-                })
-            }),
-            new SpreadsheetTabDescriptor({
-                tabId: 3,
-                descriptor: new SpreadsheetReaderDescriptor<GSDrawing>({
-                    firstRow: 4,
-                    columnFields: {
-                        "A": "id", "B": "type", "C": "title", "E": "tagsStr", "F": "date", "G": "signature",
-                        "H": "dimensions", "J": "lastHolder", "L": "localization",
-                        "O": "picture1", "P": "picture2", "Q": "thumbnail",
-                        "R": "picture1Size", "S": "picture2Size", "T": "thumbnailSize"
-                    },
-                    fieldsRequiredToConsiderFilledRow: ["id"]
-                })
-            }),
-            new SpreadsheetTabDescriptor({
-                tabId: 4,
-                descriptor: new SpreadsheetReaderDescriptor<GSDrawing>({
-                    firstRow: 4,
-                    columnFields: {
-                        "A": "id", "B": "type", "C": "title", "E": "tagsStr", "F": "date", "G": "signature",
-                        "H": "dimensions", "J": "lastHolder", "L": "localization",
-                        "O": "picture1", "P": "picture2", "Q": "thumbnail",
-                        "R": "picture1Size", "S": "picture2Size", "T": "thumbnailSize"
-                    },
-                    fieldsRequiredToConsiderFilledRow: ["id"]
-                })
-            }),
-            new SpreadsheetTabDescriptor({
-                tabId: 5,
-                descriptor: new SpreadsheetReaderDescriptor<GSDrawing>({
-                    firstRow: 4,
-                    columnFields: {
-                        "A": "id", "B": "type", "C": "title", "E": "tagsStr", "F": "date", "G": "signature",
-                        "H": "dimensions", "J": "lastHolder", "L": "localization",
-                        "O": "picture1", "P": "picture2", "Q": "thumbnail",
-                        "R": "picture1Size", "S": "picture2Size", "T": "thumbnailSize"
-                    },
-                    fieldsRequiredToConsiderFilledRow: ["id"]
-                })
+                tabId: descriptor.tabId,
+                descriptor: new SpreadsheetReaderDescriptor<GSDrawing>(descriptor.descriptor)
             })
-        ]).then(results => {
-            this.drawings = {
-                'Peintures': results[0][0],
-                'Dessins': results[0][1],
-                'Estampes': results[0][2],
-                'Divers': results[0][3],
-                'Repros': results[0][4]
-            };
+        )).then(results => {
+            this.drawings = _.reduce(results[0], (drawings, result, idx) => {
+                drawings[window.gallConfig.spreadsheetDescriptors[idx].category] = result;
+                return drawings;
+            }, {} as GSDrawingByCategory);
 
             console.log(results.length);
             console.log(_.reduce(this.drawings, (acc, drawings) => acc + (drawings?drawings.length:0), 0));
