@@ -121,11 +121,11 @@ export class PicturesLoader {
             })
         ]).then(results => {
             this.drawings = {
-                'Dessins': results[0][0],
-                'Estampes': results[0][1],
-                'Divers': results[0][2],
-                'Repros': results[0][3],
-                'Peintures': results[0][4]
+                'Peintures': results[0][0],
+                'Dessins': results[0][1],
+                'Estampes': results[0][2],
+                'Divers': results[0][3],
+                'Repros': results[0][4]
             };
 
             console.log(results.length);
