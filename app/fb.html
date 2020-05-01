@@ -1,0 +1,68 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="fragment" content="!">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/photoswipe/dist/photoswipe.css" />
+    <link rel="stylesheet" href="bower_components/photoswipe/dist/default-skin/default-skin.css" />
+    <link rel="stylesheet" href="bower_components/chosen/chosen.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css({.tmp,app}) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css" />
+    <!-- endbuild -->
+
+  </head>
+  <body class="no-touch">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="//browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <div id="gallery" class="gallery"></div>
+
+    <!--[if lt IE 9]>
+    <![endif]-->
+
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/jquery.js"></script>
+    <script src="bower_components/photoswipe/dist/photoswipe.js"></script>
+    <script src="bower_components/photoswipe/dist/photoswipe-ui-default.js"></script>
+    <script src="bower_components/lodash/lodash.js"></script>
+    <script src="bower_components/es6-promise/es6-promise.js"></script>
+    <script src="bower_components/chosen/chosen.jquery.js"></script>
+    <script src="bower_components/localforage/dist/localforage.js"></script>
+    <script src="bower_components/q/q.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <script src="bower_components/requirejs/require.js"></script>
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/ts-app.js"></script>
+    <!-- endbuild -->
+    <script src="config/fb-config.js"></script>
+    <script type="text/javascript">
+      require(['main'], function(){ console.log("Application started !"); });
+    </script>
+    <script type="text/javascript">
+        $(function(){
+            // See if this is a touch device
+            if ('ontouchstart' in window) {
+                // Set the correct [touchscreen] body class
+                $('body').removeClass('no-touch').addClass('touch');
+            }
+        });
+    </script>
+</body>
+</html>

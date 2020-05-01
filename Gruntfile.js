@@ -181,6 +181,10 @@ module.exports = function (grunt) {
       app: {
         html: '<%= layout.app %>/index.html',
         ignorePath: '<%= layout.app %>/'
+      },
+      "fb-app": {
+        html: '<%= layout.app %>/fb.html',
+        ignorePath: '<%= layout.app %>/'
       }
     },
 
@@ -221,9 +225,14 @@ module.exports = function (grunt) {
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
     useminPrepare: {
-      html: '<%= layout.app %>/index.html',
       options: {
         dest: '<%= layout.dist %>'
+      },
+      app: {
+        html: '<%= layout.app %>/index.html'
+      },
+      "fb-app": {
+        html: '<%= layout.app %>/fb.html'
       }
     },
 
