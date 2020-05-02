@@ -10,16 +10,15 @@ export interface User {
 export class Store {
     public static INSTANCE = new Store();
 
-    private static PRELOADED_PICTURES_STORENAME="preloaded-pictures";
     private static USER_STORENAME="user";
 
     public loadPreloadedPictures() {
-        return localforage.getItem<PictureIds>(Store.PRELOADED_PICTURES_STORENAME);
+        return localforage.getItem<PictureIds>(Store.preloadedPicturesStorename());
     }
 
     public savePreloadedPictures(preloadedPictures: PictureIds) {
-        return localforage.setItem(Store.PRELOADED_PICTURES_STORENAME, preloadedPictures)
-            .catch((error) => console.error(`Error while saving in store ${Store.PRELOADED_PICTURES_STORENAME} : ${error}`));
+        return localforage.setItem(Store.preloadedPicturesStorename(), preloadedPictures)
+            .catch((error) => console.error(`Error while saving in store ${Store.preloadedPicturesStorename()} : ${error}`));
     }
 
     public loadUser() {
@@ -28,5 +27,10 @@ export class Store {
 
     public saveUser(user: User) {
         return localforage.setItem(Store.USER_STORENAME, user);
+    }
+
+    private static preloadedPicturesStorename() {
+        const prefix = (window.location.href.indexOf("fb.html") === -1)?"rg":"fb";
+        return `${prefix}-preloaded-pictures`;
     }
 }
