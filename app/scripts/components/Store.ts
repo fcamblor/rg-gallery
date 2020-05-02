@@ -21,6 +21,11 @@ export class Store {
             .catch((error) => console.error(`Error while saving in store ${Store.preloadedPicturesStorename()} : ${error}`));
     }
 
+    public resetPreloadedPictures() {
+        return localforage.removeItem(Store.preloadedPicturesStorename())
+            .catch((error) => console.error(`Error while invalidating preloaded pictures cache : ${error}`));
+    }
+
     public loadUser() {
         return localforage.getItem<User>(Store.USER_STORENAME);
     }

@@ -77,6 +77,27 @@ this.addEventListener('fetch', function fetcher (event) {
     // otherwise: ignore event
 });
 
+_self.addEventListener('message', function handler (event) {
+    if(event.data.action === 'invalidate-preloaded-pictures') {
+        caches.open('gall-pictures')
+            .then(cache => {
+                cache.keys().then(cacheKeys => {
+                    let deletedPictures = [];
+                    for(const request of cacheKeys) {
+                        if(event.data.pictureUrlsToInvalidate.indexOf(request.url) !== -1) {
+                            cache.delete(request);
+                            deletedPictures.push(request.url);
+                        }
+                    }
+
+                    console.log(deletedPictures.length+" pictures have been removed from cache !");
+                    event.ports[0].postMessage({ deletedPictures });
+                });
+            });
+    }
+});
+
+
 // Essentially we don't want to require the user to refresh the page for the service worker to begin — we want
 // the service worker to activate upon initial page load.
 _self.addEventListener('activate', function(event) {

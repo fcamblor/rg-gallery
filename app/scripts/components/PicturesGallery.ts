@@ -91,12 +91,12 @@ export class PicturesGallery {
     initPreloadedPictures() {
         this._preloadablePicturesIds().then((results) => {
             if(results.preloadablePictureIds.length) {
-                this.$el.find("#preload-pictures-section").html(`${results.preloadablePictureIds.length} oeuvre(s) pourrai(en)t être chargée(s) en cache pour ensuite être visible(s) hors ligne. <button id="preload-pictures-btn">Précharger</button>`);
-                this.$el.find("#preload-pictures-btn").click(() => this.preloadPictures());
+                this.$el.find("#preload-pictures-section").html(`${results.preloadablePictureIds.length} oeuvre(s) pourrai(en)t être chargée(s) en cache pour ensuite être visible(s) hors ligne (attention, cela peut consommer beaucoup de data). <button id="preload-pictures-btn">Précharger</button>`);
+                this.$el.find("#preload-pictures-btn").on('click', () => this.preloadPictures());
             }
             if(results.preloadedPictureIds.length) {
                 this.$el.find("#invalidate-preload-pictures-section").html(`${results.preloadedPictureIds.length} oeuvre(s) peu(ven)t être supprimée(s) du cache hors ligne. <button id="invalidate-preload-pictures-btn">Invalider le cache</button>`);
-                this.$el.find("#invalidate-preload-pictures-btn").click(() => this.invalidatePreloadedPictures());
+                this.$el.find("#invalidate-preload-pictures-btn").on('click', () => this.invalidatePreloadedPictures());
             }
         });
     }
@@ -111,16 +111,33 @@ export class PicturesGallery {
         });
     }
 
-    invalidatePreloadedPictures() {
-        navigator.serviceWorker.controller.postMessage({'action':'invalidate-preloaded-pictures'});
-        let onPreloadedPicturesInvalidated = (event: Event) => {
-            alert(`Des oeuvre(s) ont été supprimée(s) du cache hors ligne !`);
+    private _sendServiceWorkerMessage(data: any): Promise<any> {
+        return new Promise((resolve, reject) => {
+            const messageChannel = new MessageChannel();
+            messageChannel.port1.onmessage = function(event) {
+                if (event.data.error) {
+                    reject(event.data.error);
+                } else {
+                    resolve(event.data);
+                }
+            };
+            navigator.serviceWorker.controller.postMessage(data, [messageChannel.port2]);
+        });
+    }
 
-            window.removeEventListener('preloaded-pictures-invalidated', onPreloadedPicturesInvalidated);
-            // Refreshing page
-            window.location.reload(true);
-        };
-        window.addEventListener('preloaded-pictures-invalidated', onPreloadedPicturesInvalidated);
+    invalidatePreloadedPictures() {
+        Store.INSTANCE.loadPreloadedPictures().then(preloadedPictureIds => {
+            const drawingsById = _.indexBy(this.drawings, drawing => drawing.id);
+            const pictureUrlsToInvalidate = _.map(preloadedPictureIds, pictureId => drawingsById[pictureId].src);
+
+            this._sendServiceWorkerMessage({'action':'invalidate-preloaded-pictures', pictureUrlsToInvalidate }).then((result) => {
+                alert(`${result.deletedPictures.length} oeuvre(s) ont été supprimée(s) du cache hors ligne !`);
+
+                Store.INSTANCE.resetPreloadedPictures()
+                    // Refreshing page
+                    .then(() => window.location.reload(true));
+            });
+        });
     }
 
     preloadPictures() {
