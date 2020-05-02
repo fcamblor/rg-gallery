@@ -7,23 +7,6 @@ export type SignatureType = 'Signé'|'Non signé';
 export type DrawingType = string;
 export type Category = 'Peintures'|'Dessins'|'Estampes'|'Divers'|'Repros';
 
-declare global {
-    interface Window {
-        gallConfig: {
-            spreadsheetId: string;
-            spreadsheetDescriptors: {
-                tabId: number;
-                category: string;
-                descriptor: {
-                    firstRow: number;
-                    columnFields: {[key: string]: string};
-                    fieldsRequiredToConsiderFilledRow: string[];
-                }
-            }[]
-        }
-    }
-}
-
 interface GSDrawing {
     id: string;
     title: string;
