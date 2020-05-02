@@ -37,7 +37,7 @@ this.addEventListener('fetch', function fetcher (event) {
     if((isAsset(request.url) && !isLocal(request.url)) || isOuterUrlWithoutCORS) {
         // Asset detected : serving from network first, then falling back on cache if not available
         event.respondWith(
-            caches.open('rg-assets').then(function(cache) {
+            caches.open('gall-assets').then(function(cache) {
                 var fetchOpts = /*isOuterUrlWithoutCORS?{ mode: 'no-cors' }:*/undefined;
                 return fetch(request, fetchOpts).then(function assetFetched(response) {
                     if(response /* && (response.ok || fetchOpts) */) {
@@ -56,7 +56,7 @@ this.addEventListener('fetch', function fetcher (event) {
     if(isPicture(request.url)) {
         // Picture detected : serving from cache first, then fallbacking on network if not in cache
         event.respondWith(
-            caches.open('rg-pictures').then(function(cache) {
+            caches.open('gall-pictures').then(function(cache) {
                 return cache.match(request).then(function(response) {
                     // return from cache, otherwise fetch from network
                     if(response) {
