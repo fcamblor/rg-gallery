@@ -31,7 +31,8 @@ if ('serviceWorker' in navigator) {
         });
     });
 
-    navigator.serviceWorker.register($("head base").attr('href')+'sw-cached-resources.js', { scope: $("head base").attr('href') })
+    const baseUrl = window.location.href.substr(0, window.location.href.lastIndexOf("/")+1);
+    navigator.serviceWorker.register(baseUrl+'sw-cached-resources.js', { scope: baseUrl })
         .then((reg) => console.log('SW Registration succeeded. Scope is ' + reg.scope))
         .catch((error, ...args) => console.error('Error when registering service worker', error, args));
 
