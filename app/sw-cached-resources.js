@@ -83,3 +83,7 @@ _self.addEventListener('activate', function(event) {
     // Calling claim() to force a "controllerchange" event on navigator.serviceWorker
     event.waitUntil(_self.clients.claim());
 });
+
+self.addEventListener('install', function(event) {
+    event.waitUntil(self.skipWaiting()); // Activate worker immediately
+});
