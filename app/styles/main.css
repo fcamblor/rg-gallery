@@ -68,9 +68,9 @@ figure figcaption {
 
 .details {
   position: absolute;
-  right: -300px;
+  right: -200px;
   height: 100%;
-  width: 300px;
+  width: 200px;
   background-color: #616161;
   color: white;
   font-size: 13px;
@@ -106,8 +106,8 @@ figure figcaption {
 
 .with-details .details {
 
-  transform: translateX(-300px);
-  -webkit-transform: translateX(-300px);
+  transform: translateX(-200px);
+  -webkit-transform: translateX(-200px);
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
