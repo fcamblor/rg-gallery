@@ -63,16 +63,13 @@ export const PHOTO_SWIPE_HTML = `
                 <!--  Controls are self-explanatory. Order can be changed. -->
 
                 <div class="pswp__counter"></div>
-
-                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-
-                <button class="pswp__button pswp__button--share" title="Share"></button>
-
-                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-
-                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-                
-                <button class="pswp__button pswp__button--info" title="Picture infos"></button>
+                <i class="custom-icon-button icon-cancel pswp__button--close"></i>
+                <i class="custom-icon-button icon-export pswp__button--share"></i>
+                <i class="custom-icon-button icon-info-circled pswp__button--info"></i>
+                <span class="resize-full-section"><i class="custom-icon-button icon-resize-full pswp__button--fs"></i></span>
+                <span class="resize-small-section"><i class="custom-icon-button icon-resize-small pswp__button--fs"></i></span>
+                <span class="zoom-in-section"><i class="custom-icon-button icon-zoom-in pswp__button--zoom"></i></span>
+                <span class="zoom-out-section"><i class="custom-icon-button icon-zoom-out pswp__button--zoom"></i></span>
 
                 <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
                 <!-- element will get class pswp__preloader--active when preloader is running -->

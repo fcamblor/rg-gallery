@@ -126,6 +126,27 @@ figure figcaption {
   transition: all 0.3s ease;
 }
 
+.custom-icon-button {
+  font-size: 25px;
+  color: white;
+  margin: 10px 3px 4px 4px;
+  float: right;
+  cursor: pointer;
+  opacity: 0.75;
+}
+.custom-icon-button:hover {
+  opacity: 1;
+}
+
+.resize-full-section { display: inline; }
+.resize-small-section { display: none; }
+.pswp--fs .resize-full-section { display: none; }
+.pswp--fs .resize-small-section { display: inline; }
+.zoom-in-section { display: inline; }
+.zoom-out-section { display: none; }
+.pswp--zoomed-in .zoom-in-section { display: none; }
+.pswp--zoomed-in .zoom-out-section { display: inline; }
+
 .pswp__button--info {
   background-position: -176px 0;
 }
