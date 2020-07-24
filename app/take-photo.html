@@ -1,0 +1,274 @@
+<!doctype html>
+<html>
+<head>
+    <style type="text/css">
+        body {
+            margin: 0px;
+        }
+
+        #container {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #picture {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            opacity: 0.5;
+        }
+
+        #action-bar {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            z-index: 99;
+        }
+
+        .abs-container {
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: 0.375em 0.75em;
+            font-size: 12px;
+            line-height: 1.5;
+            border-radius: 0.25rem;
+            overflow: visible;
+            margin: 0;
+        }
+
+        .btn {
+            color: #fff;
+            cursor: pointer;
+        }
+
+        #snap {
+            position: absolute;
+            left: 12px;
+            bottom: 12px;
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        #fullscreen {
+            position: absolute;
+            left: 100px;
+            bottom: 12px;
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+
+        #opacity-container {
+            position: absolute;
+            right: 12px;
+            bottom: 12px;
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        #opacity {
+            width: 30px;
+        }
+    </style>
+    <script type="text/javascript">
+        const searchParams = new URLSearchParams(window.location.href.substr(window.location.href.indexOf("?")));
+        if(!searchParams.has("coords")) {
+            alert("Missing coords query param !");
+        }
+        const picture = JSON.parse(searchParams.get("coords"));
+        // const picture1 = {
+        //     id: 'G001',
+        //     url: 'https://r-gounot.fr/RG/RG_Peintures/20161113-_NIK0266.jpg',
+        //     width: 3664,
+        //     height: 2813
+        // };
+        // const picture2 = {
+        //     id: 'G002',
+        //     url: 'https://r-gounot.fr/RG/RG_Peintures/20180721-NIK_4897.jpg',
+        //     width: 4625,
+        //     height: 3011
+        // };
+        // const picture = picture2;
+
+        const state = {
+            webcam: { width: 'unknown', height: 'unknown' },
+            els: {
+                actionBar: 'unknown',
+                opacity: 'unknown',
+                fullscreen: 'unknown',
+                container: 'unknown',
+                canvas: 'unknown',
+                video: 'unknown',
+                picture: 'unknown'
+            }
+        };
+
+        function initStates() {
+            return new Promise((resolve, reject) => {
+                state.els = {
+                    actionBar: document.getElementById("action-bar"),
+                    opacity: document.getElementById("opacity"),
+                    fullscreen: document.getElementById("fullscreen"),
+                    container: document.getElementById('container'),
+                    canvas: document.getElementById('canvas'),
+                    video: document.getElementById('video'),
+                    picture: document.getElementById('picture')
+                };
+
+                const video = state.els.video;
+
+                var promiseResolved = false;
+                playWebcam().then(() => {
+                    video.addEventListener('playing', function() {
+                        state.webcam = {
+                            width: video.videoWidth,
+                            height: video.videoHeight
+                        };
+
+                        // debug(JSON.stringify(state.webcam));
+
+                        promiseResolved = true;
+                        resolve();
+                    }, false);
+                });
+
+                setTimeout(() => {
+                    if(!promiseResolved) {
+                        reject("Timeout for webcam acquisition");
+                    }
+                }, 5000);
+            });
+        }
+
+        function makePictureFitInto(pictureSize, areaSize) {
+            let testingWidth1 = areaSize.w;
+            let testingHeight1 = Math.round(pictureSize.h * areaSize.w / pictureSize.w);
+
+            let testingWidth2 = Math.round(pictureSize.w * areaSize.h / pictureSize.h);
+            let testingHeight2 = areaSize.h;
+
+            if(testingWidth2 < areaSize.w && testingHeight1 < areaSize.h) {
+                // returning biggest area
+                if(testingWidth1 * testingHeight1 > testingWidth2 * testingHeight2) {
+                    return { w: testingWidth1, h: testingHeight1};
+                } else {
+                    return { w: testingWidth2, h: testingHeight2};
+                }
+            } else if(testingWidth2 > areaSize.w) {
+                return { w: testingWidth1, h: testingHeight1};
+            } else if(testingHeight1 > areaSize.h) {
+                return { w: testingWidth2, h: testingHeight2};
+            }
+        }
+
+        function viewportSizeResetted() {
+            // const windowWidth = document.getElementsByTagName("body")[0].clientWidth,
+            //       windowHeight = document.getElementsByTagName("body")[0].clientHeight;
+            const windowWidth = window.innerWidth,
+                windowHeight = window.innerHeight;
+
+            const videoSize = makePictureFitInto({w: state.webcam.width, h: state.webcam.height }, {w: windowWidth, h: windowHeight });
+
+            state.els.container.width = videoSize.w;
+            state.els.container.height = videoSize.h;
+            state.els.video.width = videoSize.w;
+            state.els.video.height = videoSize.h;
+            state.els.canvas.width = videoSize.w;
+            state.els.canvas.height = videoSize.h;
+            state.els.actionBar.style.width = ""+videoSize.w+"px";
+            state.els.actionBar.style.height = ""+videoSize.h+"px";
+
+            const pictureProjectedSize = makePictureFitInto({w: picture.width, h: picture.height}, videoSize);
+
+            state.els.picture.width = pictureProjectedSize.w;
+            state.els.picture.height = pictureProjectedSize.h;
+            state.els.picture.style.top = ""+Math.round(videoSize.h / 2 - pictureProjectedSize.h / 2)+"px";
+            state.els.picture.style.left = ""+Math.round(videoSize.w / 2 - pictureProjectedSize.w / 2)+"px";
+            state.els.picture.src = picture.url;
+        }
+
+        function playWebcam() {
+            // Get access to the camera!
+            if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                // Not adding `{ audio: true }` since we only want video now
+                return navigator.mediaDevices.getUserMedia({
+                    // prefer back camera, but fallback on front one if not available (on desktop typically)
+                    video: {
+                        facingMode: { ideal: "environment" },
+                        width: { min: 320 },
+                        height: { min: 240 }
+                    }
+                }).then(function(stream) {
+                    state.els.video.srcObject = stream;
+                    state.els.video.play();
+                });
+            } else {
+                return Promise.reject("webcam not accessible !");
+            }
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        function initEvents() {
+            var context = state.els.canvas.getContext('2d');
+
+            // Trigger photo take
+            document.getElementById("snap").addEventListener("click", function() {
+                context.drawImage(state.els.video, 0, 0, state.webcam.width, state.webcam.height);
+            });
+
+            window.addEventListener("resize", viewportSizeResetted);
+            window.addEventListener("orientationchange", () => {
+                const oldWebcamSize = { w: state.webcam.width, h: state.webcam.height };
+                state.webcam.width = oldWebcamSize.h;
+                state.webcam.height = oldWebcamSize.w;
+
+                viewportSizeResetted();
+            });
+            state.els.opacity.addEventListener("change", (e) => {
+                state.els.picture.style.opacity = Number(e.currentTarget.value)/100;
+            });
+            state.els.fullscreen.addEventListener("click", toggleFullScreen);
+        }
+
+        function debug(text) {
+            document.getElementById("debug").innerHTML = text;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initStates().then(() => {
+                viewportSizeResetted();
+                initEvents();
+            });
+        });
+    </script>
+</head>
+
+<body>
+<div id="container">
+    <video id="video" autoplay=""></video>
+    <div id="action-bar">
+        <button class="abs-container btn" id="snap">Take photo</button>
+        <button class="abs-container btn" id="fullscreen">Toggle fullscreen</button>
+        <div id="opacity-container" class="abs-container">
+            Opacity: <input type="number" value="50" id="opacity" max="100" min="0" step="5" />%
+        </div>
+    </div>
+</div>
+<span id="debug"></span>
+<img id="picture" src="" />
+<canvas id="canvas"></canvas>
+</body>
+</html>
