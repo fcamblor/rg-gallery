@@ -31,12 +31,22 @@ export class PhotoSwipeComponent {
         // this.destroy() won't at that time)
         this.photoSwipe.listen('destroy', () => {
             this.$el.find(".pswp .pswp__button--info").off('click');
+            this.$el.find(".pswp .pswp__button--photo").off('click');
             this.photoSwipe = null;
         });
         this.showDetailsFor(<DrawingItem>this.photoSwipe.currItem);
 
         this.$el.find(".pswp .pswp__button--info").click((event) => {
             this.$el.find(".pswp__scroll-wrap").toggleClass("with-details");
+        });
+        this.$el.find(".pswp .pswp__button--photo").click((event) => {
+            const drawingItem = this.photoSwipe.currItem as DrawingItem;
+            window.location.href = 'take-photo.html?coords='+encodeURIComponent(JSON.stringify({
+                id: drawingItem.id,
+                url: drawingItem.src,
+                width: drawingItem.w,
+                height: drawingItem.h
+            }));
         });
     }
 

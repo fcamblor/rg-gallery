@@ -66,6 +66,7 @@ export const PHOTO_SWIPE_HTML = `
                 <i class="custom-icon-button icon-cancel pswp__button--close"></i>
                 <i class="custom-icon-button icon-export pswp__button--share"></i>
                 <i class="custom-icon-button icon-info-circled pswp__button--info"></i>
+                <i class="custom-icon-button icon-camera pswp__button--photo"></i>
                 <span class="resize-full-section"><i class="custom-icon-button icon-resize-full pswp__button--fs"></i></span>
                 <span class="resize-small-section"><i class="custom-icon-button icon-resize-small pswp__button--fs"></i></span>
                 <span class="zoom-in-section"><i class="custom-icon-button icon-zoom-in pswp__button--zoom"></i></span>
