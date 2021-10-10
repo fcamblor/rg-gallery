@@ -85,6 +85,6 @@ export class DrawingItem implements PhotoSwipe.Item {
     }
 
     private static normalize(value: string) {
-        return value.toUpperCase();
+        return (""+value).toUpperCase();
     }
 }

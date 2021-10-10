@@ -72,33 +72,32 @@ export class SpreadsheetReader {
     public static readFromDescriptors(spreadsheetId: string, descriptors: SpreadsheetTabDescriptor<any>[], errorHandler?: (message: string) => void): Promise<any[]> {
         return Promise.all(_.map(descriptors, (spreadsheetTabDescriptor) =>
             $.ajax({
-                url: `https://spreadsheets.google.com/feeds/cells/${spreadsheetId}/${spreadsheetTabDescriptor.tabId}/public/basic?alt=json&v=3.0`,
-                dataType: 'jsonp',
+                url: `https://api.jsonstorage.net/v1/json/8261aa6d-089f-4b44-8883-b3e0aacdb9b6`,
                 cache: true,
-                jsonp: 'callback',
                 // Using unique jsonp callback names here because if multiple descriptors are called with jsonp,
                 // we need to provide different callback names for each
                 // and on the other hand, we don't want to have a jquery-generated callback name because it won't be
                 // cacheable by service worker
-                jsonpCallback: `___clbk_${spreadsheetId.replace(/-/gi, '_')}_${spreadsheetTabDescriptor.tabId}`,
                 crossDomain: true,
                 async: false
-            }).then(
-                result =>
-                    new SpreadsheetReader().read(result, spreadsheetTabDescriptor.descriptor),
-                (...error) => {
-                    (errorHandler || console.error)(`Error while fetching spreadsheet info for tab ${spreadsheetTabDescriptor.tabId} : ${JSON.stringify(error)}`);
-                    return Promise.reject(null);
-                }
-            )
-        )).then((...results) => results);
+            }).then(result => {
+                return new SpreadsheetReader().read(result.feed.tabEntries.find(function (te) {
+                    return te.tabIdx === spreadsheetTabDescriptor.tabId
+                }).entries, spreadsheetTabDescriptor.descriptor);
+            }, (...error) => {
+                (errorHandler || console.error)(`Error while fetching spreadsheet info for tab ${spreadsheetTabDescriptor.tabId} : ${JSON.stringify(error)}`);
+                return Promise.reject(null);
+            })
+        )).then((...results) => {
+            return results
+        });
     }
 
-    public read<T,T2>(spreadsheetRepresentation: SpreadsheetContent, descriptor: IPostProcessableSpreadsheetReaderDescriptor<T,T2>): Promise<T[]>|Promise<T2> {
+    public read<T,T2>(entries: Array<{title: CellContent,content: CellContent}>, descriptor: IPostProcessableSpreadsheetReaderDescriptor<T,T2>): Promise<T[]>|Promise<T2> {
         return new Promise<T[]|T2>((resolve, reject) => {
             // First, reading every cells and building cell object like this :
             // { r: 1, c: "A", v: "Prénom" }
-            let cells = _.map(spreadsheetRepresentation.feed.entry, function(spEntry){
+            let cells = _.map(entries, function(spEntry){
                 let cellCoords = /([A-Z]+)([0-9]+)/g.exec(spEntry.title.$t);
                 return { v: spEntry.content.$t, r: Number(cellCoords[2]), c: cellCoords[1] };
             });
