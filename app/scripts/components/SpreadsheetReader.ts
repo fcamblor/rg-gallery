@@ -72,7 +72,7 @@ export class SpreadsheetReader {
     public static readFromDescriptors(spreadsheetId: string, descriptors: SpreadsheetTabDescriptor<any>[], errorHandler?: (message: string) => void): Promise<any[]> {
         return Promise.all(_.map(descriptors, (spreadsheetTabDescriptor) =>
             $.ajax({
-                url: `https://api.jsonstorage.net/v1/json/8261aa6d-089f-4b44-8883-b3e0aacdb9b6`,
+                url: `https://api.jsonstorage.net/v1/json/5dfc7ded-7720-4b48-8622-4a736b97d3fd/8261aa6d-089f-4b44-8883-b3e0aacdb9b6`,
                 cache: true,
                 // Using unique jsonp callback names here because if multiple descriptors are called with jsonp,
                 // we need to provide different callback names for each
